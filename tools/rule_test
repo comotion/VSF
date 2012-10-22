@@ -1,0 +1,26 @@
+#!/usr/bin/awk -f
+# This thing is quite ugly, and should probably not be used as-is.
+# Author: Kristian Lyngstol <kristian@redpill-linpro.com>
+/\/\/TEST:/ {
+	FS=":"
+	ORS=""
+	print $3 " -Used 'http://localhost:8081"
+	for(n=4; n<=NF; n++) {
+		if (n > 4)
+			print ":"
+		print $n
+	}
+	print "' | grep -q " $2" && echo Rule positive test " $2 " Ok || echo Rule positive test" $2 " FAILED"
+	print "\n"
+} END { print "\n"} BEGIN { FS = ":" }
+/\/\/TESTN:/ {
+	FS=":"
+	ORS=""
+	print $3 " -Used 'http://localhost:8081"
+	for(n=4; n<=NF; n++) {
+		if (n > 4)
+			print ":"
+		print $n
+	}
+	print "' | grep -q " $2" && echo Rule negative test " $2 " FAILED || echo Rule negative test" $2 " Ok"
+} END { print "\n"} BEGIN { FS = ":" }

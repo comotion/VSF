@@ -1,0 +1,24 @@
+#!/bin/bash
+# 
+# Braindead script to verify that all X-VSF-VCL-variables are part of
+# VARIABLES.
+
+if [ ! -f VARIABLES ]; then
+	echo 1>&2 "No VARIABLES-file found. Bailing."
+	exit 1;
+fi
+
+RET=0
+
+for a in `grep --exclude=variables.vcl 'X-VSF-' *vcl rules/*vcl | sed 's/.*X-VSF/X-VSF/;s/[){]*//g;s/\s.*//;s/\;\s*$//;s/[^a-zA-Z0-9]*$//' | sort | uniq`; do 
+	if ! grep -q $a VARIABLES; then
+		echo >&2 "Variable $a found in a module, but not in VARIABLES! Unsafe."
+		grep $a *vcl rules/*vcl | cat 1>&2
+		if [ "x$a" = "xX-VSF-Info" ]; then
+			echo >&2 "Are you sure you didn't mean X-VSF-RuleInfo?"
+		fi
+		RET=1;
+	fi
+done
+
+exit $RET

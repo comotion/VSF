@@ -1,0 +1,12 @@
+[submodule "libvmod-parsereq"]
+	path = libvmod-parsereq
+	url = https://github.com/xcir/libvmod-parsereq.git
+[submodule "libvmod-urlcode"]
+	path = libvmod-urlcode
+	url = https://github.com/fastly/libvmod-urlcode.git
+[submodule "libvmod-shield"]
+	path = libvmod-shield
+	url = https://github.com/varnish/libvmod-shield.git
+[submodule "libvmod-throttle"]
+	path = libvmod-throttle
+	url = https://github.com/nand2/libvmod-throttle.git

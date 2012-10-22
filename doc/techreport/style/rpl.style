@@ -1,0 +1,46 @@
+  styles:
+    title:
+      parent: heading
+      fontName: stdBold
+      fontSize: 300%
+      alignment: TA_CENTER
+      keepWithNext: false
+      spaceAfter: 10
+
+    heading1:
+      parent: heading
+      fontName: stdBold
+      fontSize: 200%
+
+    heading2:
+      parent: heading
+      fontName: stdBold
+      fontSize: 150%
+
+    heading3:
+      parent: heading
+      fontName: stdBoldItalic
+      fontSize: 125%
+
+    heading4:
+      parent: heading
+      fontName: stdBoldItalic
+
+    redpillred:
+      textColor: "D7001C#"
+
+  pageSetup:
+    size: A4
+    firstTemplate: coverPage
+    # can decrease the margin since we add our logo up there
+    margin-top: 1.5cm
+
+  pageTemplates:
+    coverPage:
+        frames: []
+            [0cm, 10cm, 100%, 30%]
+        showHeader : false
+        showFooter : false
+
+    oneColumn:
+        footerSeparator : true

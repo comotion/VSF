@@ -1,0 +1,12 @@
+Simple styles for making "redpill-esque" documents in RST.
+
+I suggest putting something like this in your login script:
+
+export RPLSTYLE=/home/mha/rpsvn/database/style
+alias rpldoc="rst2pdf -c --stylesheet-path=$RPLSTYLE -s rpl.style $1"
+
+
+I haven't found a way to make the include required in the RST file
+be anything than a fully specified path yet, so you'll need to make it
+a fully specified path. Should probably be able to fix that with a
+pre-processor...

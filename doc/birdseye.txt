@@ -1,0 +1,23 @@
+abstract
+
+ - varnish security barriers in the architecture
+ - flexibility of http requests "swiss army knife" of http
+ - request inspection
+ - normalization
+ - structured rules writing
+ - attack response
+ - fingerprinting
+ - redirection to honeypot
+ - "realtime" attack mitigation
+
+Previous work
+ VFW + security.vcl
+ GUI and effectivity tests
+ DoS and DDoS mitigation
+
+Current/future work
+ VFW merger / Varnish Security Firewall
+ POST handling
+ normalization
+ honeypot redir
+

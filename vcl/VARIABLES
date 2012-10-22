@@ -1,0 +1,43 @@
+# List of variables, one per line.
+# This is used to auto-generate variables.vcl AND to verify that no
+# X-VSF-variables occur in modules that aren't listed here. 
+# Comments start with #, blank lines are skipped.
+
+X-VSF-Severity
+# return value for function
+X-VSF-Return
+# arguments to function
+X-VSF-Arg
+X-VSF-Module
+
+#  Rule IDs
+#     1-99,999; reserved for local (internal) use. Use as you see fit but do not use this range for rules that are distributed to others.
+#     100,000-199,999; reserved for internal use of the engine, to assign to rules that do not have explicit IDs.
+#     200,000-299,999; reserved for rules published at modsecurity.org.
+#     300,000-399,999; reserved for rules published at gotroot.com.
+#     400,000-419,999; unused (available for reservation).
+#     420,000-429,999; reserved for ScallyWhack.
+#     430,000-899,999; unused (available for reservation).
+#     900,000-999,999; reserved for the Core Rules project.
+#     1,000,000 and above; unused (available for reservation).
+X-VSF-RuleID
+# Rule = Module-RuleId;
+X-VSF-Rule
+X-VSF-RuleName
+X-VSF-RuleInfo
+# the evil.. gather info about him here
+X-VSF-Client
+# custom client response, in html
+X-VSF-Response
+# cloak logger stuff
+X-VSF-Cloak-status
+# is the page static?
+X-VSF-Static
+# the body match
+X-VSF-Body
+# client and request info
+X-VSF-ClientIP
+X-VSF-Method
+X-VSF-Proto
+X-VSF-UA
+X-VSF-URL
