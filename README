@@ -15,7 +15,7 @@ VSF aims to provide:
    upon when Bad Stuff happens.
 
 This is done mainly by using clever VCL, and with as little impact on
-normal operation as possible. The incident handlers are mainly CGI-like
+normal operation as possible. The incident handlers can be CGI-like
 scripts on a backend.
 
 Quick Start
@@ -42,13 +42,16 @@ for mod in parsereq urlcode shield throttle; do
 done
 
 now symlink the vcl directory into /etc/varnish/security
+
+  cd /etc/varnish && ln -s /PATH/TO/VSF/vcl security
+
 then you edit your default.vcl and add this line near the top:
 
-	include "/etc/varnish/security/main.vcl";
+	include "/etc/varnish/security/vsf.vcl";
 
 At this point, you should only need to reload your varnish configuration.
 
-You may have to or want to modify config.vcl to fit your needs. 
+You may want to modify config.vcl to fit your needs. 
 Remember that paths must be hardcoded and absolute.
 
 The Architecture
