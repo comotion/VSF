@@ -1,0 +1,48 @@
+body {
+	background-color: #FFFFFF;
+	font-family: arial, verdana;
+	font-size: 10px;
+	color: #000000
+	margin: 5px 10px;
+}
+
+table.log {
+	background-color: #F8F8F8;
+	border-width: 1px;
+	border-spacing: 1px;
+	border-style: solid;
+	border-color: #000000;
+	width: 90%;
+}
+
+table.log td {
+	border-width: 1px;
+	border-style: solid;
+	border-color: #000000;
+}
+
+table.log td.logtitle {
+	font-size: 12px;
+	font-weight: bold;
+	color: #000000;
+	margin: 5px 10px;
+	text-align: center;
+}
+
+table.log td.eventurl {
+	font-size: 11px;
+	color: #C00000;
+	margin: 5px 10px;
+}
+
+table.log td.eventua {
+	font-size: 11px;
+	color: #0033CC;
+	margin: 5px 10px;
+}
+
+div.loggrid {
+	width: 900px;
+	margin-left: auto;
+	margin-right: auto;
+}

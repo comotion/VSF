@@ -1,0 +1,16 @@
+Tools are all well and good BUT,
+
+the 2vcl breach parser is not complete and is able to translate only some of
+the mod_security rules. 
+For this approach to be viable in the long term it would be best to rewrite
+the parser with Parser Expression Grammars instead of the waterfall parser
+currently implemented.
+
+AND
+
+The vfw-web webgui is not ported to VSF yet. You're welcome to port it ;-)
+Only issue at present is that the log should be extracted from varnishlog
+and not syslog, and is therefore presented in a different format.
+
+
+
