@@ -118,9 +118,9 @@ Future Work
 Unicode codepoints must be normalized to the shortest-byte representation
 to effectively combat WAF evasion. 
 
-http://www.symantec.com/connect/articles/ids-evasion-unicode
-solution: http://www.public-software-group.org/utf8proc
-http://www.public-software-group.org/pub/projects/utf8proc/v1.1.5/utf8proc-v1.1.5.tar.gz
+* http://www.symantec.com/connect/articles/ids-evasion-unicode
+ * solution: http://www.public-software-group.org/utf8proc
+ * http://www.public-software-group.org/pub/projects/utf8proc/v1.1.5/utf8proc-v1.1.5.tar.gz
 
 Write a handler to redirect triggered requests to a honeypot rather than bugging out.
 A handler could also do signature-based recognition of the client/attacker.
