@@ -34,18 +34,25 @@ cd -
 
 Build VMods
 -----------
-for mod in parsereq urlcode shield throttle; do
-   cd libvmod-$mod
-   ./autogen.sh && VARNISHSRC=../varnish-3.0.3 ./configure && make -j3
-   make install
-   cd -
-done
+
+::
+
+   for mod in parsereq urlcode shield throttle; do
+      cd libvmod-$mod
+      ./autogen.sh && VARNISHSRC=../varnish-3.0.3 ./configure && make -j3
+      make install
+      cd -
+   done
 
 now symlink the vcl directory into /etc/varnish/security
+
+::
 
   cd /etc/varnish && ln -s /PATH/TO/VSF/vcl security
 
 then you edit your default.vcl and add this line near the top:
+
+::
 
 	include "/etc/varnish/security/vsf.vcl";
 
@@ -70,11 +77,11 @@ or do any other synthetic response, or VSF can log,
 rewrite the original request and send it to a backend
 designed to do more clever things, like:
 
-- Block the client in a firewall
-- Log the event
-- Test-run the code.
-- Paint you a pretty picture....
-- ....
+* Block the client in a firewall
+* Log the event
+* Test-run the code.
+* Paint you a pretty picture....
+* ....
 
 There are several handlers defined and you can set the default handler in handlers.vcl.
 The default handler rejects detected malicious traffic.
