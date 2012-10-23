@@ -27,11 +27,16 @@ which in turn require the Varnish 3.x source code to compile and run.
 
 Build Varnish
 -------------
-build-essential libpcre3-dev
-wget http://repo.varnish-cache.org/source/varnish-3.0.3.tar.gz
-tar xf varnish-3.0.3.tar.gz && cd varnish-3.0.3 && ./configure
-make -j3 && make install
-cd -
+
+::
+
+ build-essential libpcre3-dev
+ wget http://repo.varnish-cache.org/source/varnish-3.0.3.tar.gz
+ tar xf varnish-3.0.3.tar.gz && cd varnish-3.0.3 && ./configure
+ make -j3 && make install
+ cd -
+
+then
 
 Build VMods
 -----------
