@@ -1,3 +1,4 @@
+=========================
 Varnish Security Firewall
 =========================
 
@@ -80,8 +81,7 @@ designed to do more clever things, like:
 * Block the client in a firewall
 * Log the event
 * Test-run the code.
-* Paint you a pretty picture....
-* ....
+* Paint you a pretty picture...
 
 There are several handlers defined and you can set the default handler in handlers.vcl.
 The default handler rejects detected malicious traffic.
@@ -96,14 +96,19 @@ Let us know! http://github.com/comotion/VSF/issues
 References
 ==========
 
-This work is based on VFW by Eduardo S. Scarpellini and 
-Security.VCL by Kristian Lyngstøl, Edward B. Fjellskål and Kacper Wysocki,
-as well as the authors of the following VMODs:
+This work is based on the work of:
+
+* VFW                         https://github.com/scarpellini/VFW
+ * by Eduardo S. Scarpellini
+* Security.VCL                https://github.com/comotion/security.vcl
+ * by Kristian Lyngstøl, Edward B. Fjellskål and Kacper Wysocki
+
+As well as the authors of the following VMODs:
 
 Syohei 'xcir' Tanaka:         https://github.com/xcir/libvmod-parsereq.git
 N. 'nand2' Deschildre:        https://github.com/nand2/libvmod-throttle.git
 Rogier 'DocWilco' Mulhuijzen: https://github.com/fastly/libvmod-urlcode.git
-Varnish Software:             https://github.com/varnish/libvmod-shield.git
+Varnish Software ('martin'):  https://github.com/varnish/libvmod-shield.git
 
 and the Varnish Cache by Poul-Henning Kamp, of course ;-)
 
