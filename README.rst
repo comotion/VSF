@@ -98,17 +98,17 @@ References
 
 This work is based on the work of:
 
-* VFW                         https://github.com/scarpellini/VFW
+* VFW                           https://github.com/scarpellini/VFW
  * by Eduardo S. Scarpellini
-* Security.VCL                https://github.com/comotion/security.vcl
+* Security.VCL                  https://github.com/comotion/security.vcl
  * by Kristian Lyngstøl, Edward B. Fjellskål and Kacper Wysocki
 
 As well as the authors of the following VMODs:
 
-Syohei 'xcir' Tanaka:         https://github.com/xcir/libvmod-parsereq.git
-N. 'nand2' Deschildre:        https://github.com/nand2/libvmod-throttle.git
-Rogier 'DocWilco' Mulhuijzen: https://github.com/fastly/libvmod-urlcode.git
-Varnish Software ('martin'):  https://github.com/varnish/libvmod-shield.git
+* Syohei 'xcir' Tanaka:         https://github.com/xcir/libvmod-parsereq.git
+* N. 'nand2' Deschildre:        https://github.com/nand2/libvmod-throttle.git
+* Rogier 'DocWilco' Mulhuijzen: https://github.com/fastly/libvmod-urlcode.git
+* Varnish Software ('martin'):  https://github.com/varnish/libvmod-shield.git
 
 and the Varnish Cache by Poul-Henning Kamp, of course ;-)
 
