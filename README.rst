@@ -1,3 +1,4 @@
+=========================
 Varnish Security Firewall
 =========================
 
@@ -26,11 +27,16 @@ which in turn require the Varnish 3.x source code to compile and run.
 
 Build Varnish
 -------------
-build-essential libpcre3-dev
-wget http://repo.varnish-cache.org/source/varnish-3.0.3.tar.gz
-tar xf varnish-3.0.3.tar.gz && cd varnish-3.0.3 && ./configure
-make -j3 && make install
-cd -
+
+::
+
+ build-essential libpcre3-dev
+ wget http://repo.varnish-cache.org/source/varnish-3.0.3.tar.gz
+ tar xf varnish-3.0.3.tar.gz && cd varnish-3.0.3 && ./configure
+ make -j3 && make install
+ cd -
+
+then
 
 Build VMods
 -----------
@@ -80,8 +86,7 @@ designed to do more clever things, like:
 * Block the client in a firewall
 * Log the event
 * Test-run the code.
-* Paint you a pretty picture....
-* ....
+* Paint you a pretty picture...
 
 There are several handlers defined and you can set the default handler in handlers.vcl.
 The default handler rejects detected malicious traffic.
@@ -96,14 +101,19 @@ Let us know! http://github.com/comotion/VSF/issues
 References
 ==========
 
-This work is based on VFW by Eduardo S. Scarpellini and 
-Security.VCL by Kristian Lyngstøl, Edward B. Fjellskål and Kacper Wysocki,
-as well as the authors of the following VMODs:
+This work is based on the work of:
 
-Syohei 'xcir' Tanaka:         https://github.com/xcir/libvmod-parsereq.git
-N. 'nand2' Deschildre:        https://github.com/nand2/libvmod-throttle.git
-Rogier 'DocWilco' Mulhuijzen: https://github.com/fastly/libvmod-urlcode.git
-Varnish Software:             https://github.com/varnish/libvmod-shield.git
+* VFW                           https://github.com/scarpellini/VFW
+ * by Eduardo S. Scarpellini
+* Security.VCL                  https://github.com/comotion/security.vcl
+ * by Kristian Lyngstøl, Edward B. Fjellskål and Kacper Wysocki
+
+As well as the authors of the following VMODs:
+
+* Syohei 'xcir' Tanaka:         https://github.com/xcir/libvmod-parsereq.git
+* N. 'nand2' Deschildre:        https://github.com/nand2/libvmod-throttle.git
+* Rogier 'DocWilco' Mulhuijzen: https://github.com/fastly/libvmod-urlcode.git
+* Varnish Software ('martin'):  https://github.com/varnish/libvmod-shield.git
 
 and the Varnish Cache by Poul-Henning Kamp, of course ;-)
 
@@ -113,9 +123,9 @@ Future Work
 Unicode codepoints must be normalized to the shortest-byte representation
 to effectively combat WAF evasion. 
 
-http://www.symantec.com/connect/articles/ids-evasion-unicode
-solution: http://www.public-software-group.org/utf8proc
-http://www.public-software-group.org/pub/projects/utf8proc/v1.1.5/utf8proc-v1.1.5.tar.gz
+* http://www.symantec.com/connect/articles/ids-evasion-unicode
+ * solution: http://www.public-software-group.org/utf8proc
+ * http://www.public-software-group.org/pub/projects/utf8proc/v1.1.5/utf8proc-v1.1.5.tar.gz
 
 Write a handler to redirect triggered requests to a honeypot rather than bugging out.
 A handler could also do signature-based recognition of the client/attacker.
