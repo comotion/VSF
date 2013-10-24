@@ -34,7 +34,7 @@ sub vcl_recv {
 	# Invalid Connection Header
 	# - http://mod-security.svn.sourceforge.net/ (modsecurity_crs_20_protocol_violations.conf)
 	# - http://www.bad-behavior.ioerror.us/documentation/how-it-works/ 
-	if (req.http.Connection && req.http.Connection !~ "^(keep-alive|close)$") {
+	if (req.http.Connection && req.http.Connection !~ "(?i)^(keep-alive|close)$") {
 		set req.http.X-VSF-RuleName = "Invalid Connection Header";
 		set req.http.X-VSF-RuleID = "protocol.conn-1";
 		call sec_handler;
