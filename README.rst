@@ -30,7 +30,7 @@ Build Varnish
 
 ::
 
- build-essential libpcre3-dev
+ apt-get install build-essential libpcre3-dev
  wget http://repo.varnish-cache.org/source/varnish-3.0.3.tar.gz
  tar xf varnish-3.0.3.tar.gz && cd varnish-3.0.3 && ./configure
  make -j3 && make install
