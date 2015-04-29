@@ -65,9 +65,8 @@ sub vcl_deliver {
         && (resp.status < 400 || resp.status > 405)
         || resp.status > 503) {
 
-        # Workaround: in deliver, we can't call our handler which calls error
         set req.http.X-VSF-Cloak-status = resp.status;
-        return (restart);
+        call sec_cloak;
     }
 }
 
@@ -82,10 +81,6 @@ sub vcl_recv {
         # htrosbif attacks! lets try to confuse it
         return (synth(100, "continue"));
         call sec_handler;
-    }
-    # we restarted from deliver, we wanted the handler
-    if (req.restarts == 1 && req.http.X-VSF-Cloak-status) {
-        call sec_cloak;
     }
 }
 
