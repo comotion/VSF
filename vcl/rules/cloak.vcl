@@ -93,7 +93,7 @@ sub vcl_recv {
 
 # Try to obscure the client-to-backend comms as well
 sub vcl_miss {
-   # unset bereq.http.User-agent;
-   unset bereq.http.X-Forwarded-For;
-   unset bereq.http.X-Varnish;
+   # unset req.http.User-agent;
+   unset req.http.X-Forwarded-For;
+   unset req.http.X-Varnish;
 }
