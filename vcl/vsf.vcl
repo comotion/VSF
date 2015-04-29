@@ -26,7 +26,7 @@ sub vcl_recv {
             std.log("parsereq failed, boogs abound");
         } else {
             /* parse and decode the request */
-            set req.http.X-VSF-URL  = urlcode.decode(req.url);
+            set req.http.X-VSF-URL = urlcode.decode(req.url);
             set req.http.X-VSF-Body = parsereq.post_body();
         }
     }
@@ -35,8 +35,8 @@ sub vcl_recv {
     # this is one of the vars guaranteed to be present
     # if and only if your request is inside security.vcl
     set req.http.X-VSF-Client = "[" +  client.ip + "] "
-                                         + req.http.host + req.url
-                                         + " (" + req.http.user-agent + ")";
+        + req.http.host + req.url
+        + " (" + req.http.user-agent + ")";
 }
 
 # which modules to use, what to log, how to handle events and honeypot backend definition
@@ -111,7 +111,7 @@ sub vcl_synth {
             set resp.reason = "OK";
             synthetic(req.http.X-VSF-Response);
         }
-        # fallthrough to other vcl_error's
+        # fallthrough to other vcl_synth's
     }
 }
 
@@ -192,7 +192,8 @@ sub sec_handler {
             call sec_default_handler;
         }
 
-        if (!req.http.X-VSF-Client ) { # this variable always present, so rule always false
+        # this variable always present, so rule always false
+        if (!req.http.X-VSF-Client ) {
             # all functions must be used in vcl, fool compiler by putting them here
 
             std.log("security.vcl WONTREACH: available sec handlers");
@@ -200,16 +201,16 @@ sub sec_handler {
             #      handler name  # code # purpose
             call sec_general;    # 800  # debug handler - delivers X-VSF-Rule to client
             call sec_reject;     # 801  # 403 reject with message
-            call sec_redirect;  # 802  # 302 redirect
-            call sec_honeypot;  # 803  # restart request with honeypot backend
-            call sec_synthtml;  # 804  # synthesize a response
-            call sec_drop;        # 805  # drop the request (not implemented)
-            call sec_myhandler; # any  # do your own thing
-            call sec_default_handler;  # fallback handler
+            call sec_redirect;   # 802  # 302 redirect
+            call sec_honeypot;   # 803  # restart request with honeypot backend
+            call sec_synthtml;   # 804  # synthesize a response
+            call sec_drop;       # 805  # drop the request (not implemented)
+            call sec_myhandler;  # any  # do your own thing
+            call sec_default_handler;   # fallback handler
             call sec_throttle;
             ## note! the passthru handler really does pass thru
             # - you must make sure it is the last thing called
-            call sec_passthru;  # n/a  # log client and pass thru to default error logic
+            call sec_passthru;   # n/a  # log client and pass thru to default error logic
         }
     }
 }

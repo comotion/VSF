@@ -1,6 +1,6 @@
 # List of variables, one per line.
 # This is used to auto-generate variables.vcl AND to verify that no
-# X-VSF-variables occur in modules that aren't listed here. 
+# X-VSF-variables occur in modules that aren't listed here.
 # Comments start with #, blank lines are skipped.
 
 X-VSF-Severity

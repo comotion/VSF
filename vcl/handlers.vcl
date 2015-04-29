@@ -1,6 +1,6 @@
 /* Security.vcl handlers VCL file
  * Copyright (C) 2009 Kacper Wysocki
- * 
+ *
  * **************** handlers **************** *
  * The rest of the code assumes this file defines the
  * following:
@@ -12,19 +12,19 @@
  */
 
 sub sec_default_handler {
-   # swap this one with your handler (see below)
-   call sec_reject;
+    # swap this one with your handler (see below)
+    call sec_reject;
 
-   #call sec_general;   # 800  # debug handler - delivers X-VSF-Rule to client
-   #call sec_reject;    # 801  # 403 reject with message
-   #call sec_redirect;  # 802  # 302 redirect
-   #call sec_honeypot;  # 803  # restart request with honeypot backend
-   #call sec_synthtml;  # 804  # synthesize a response
-   #call sec_drop;      # 805  # drop the request (not implemented) 
-   #call sec_myhandler; # any  # do your own thing (as below)
+    #call sec_general;   # 800  # debug handler - delivers X-VSF-Rule to client
+    #call sec_reject;    # 801  # 403 reject with message
+    #call sec_redirect;  # 802  # 302 redirect
+    #call sec_honeypot;  # 803  # restart request with honeypot backend
+    #call sec_synthtml;  # 804  # synthesize a response
+    #call sec_drop;      # 805  # drop the request (not implemented)
+    #call sec_myhandler; # any  # do your own thing (as below)
 }
 
-/* the honeypot backend... 
+/* the honeypot backend...
  * presently defined to give no service
  * possible uses:
  *   send to less critical server
@@ -35,16 +35,16 @@ sub sec_default_handler {
  *   ... other active responses?
  */
 backend sec_honey {
-   .host = "127.0.1.2";
-   .port = "3";
+    .host = "127.0.1.2";
+    .port = "3";
 }
 
 # Here you can specify what gets logged when a rule triggers.
 sub sec_log {
-         std.log("security.vcl alert xid:" + req.xid + " " + req.proto
-             + " [" + req.http.X-VSF-Module + "-" + req.http.X-VSF-RuleId + "]"
-             + req.http.X-VSF-Client
-             + " (" +  req.http.X-VSF-RuleName + ") ");
+    std.log("security.vcl alert xid:" + req.xid + " " + req.proto
+        + " [" + req.http.X-VSF-Module + "-" + req.http.X-VSF-RuleId + "]"
+        + req.http.X-VSF-Client
+        + " (" +  req.http.X-VSF-RuleName + ") ");
     #std.syslog(6, "<VSF> " + std.time2real(now) + " [" + req.http.X-VSF-RuleName + "/ruleid:" + req.http.X-VSF-RuleID + "]: " + req.http.X-VSF-ClientIP + " - " + req.http.X-VSF-Method + " http://" + req.http.X-VSF-URL + " " + req.http.X-VSF-Proto + " - " + req.http.X-VSF-UA);
 }
 
@@ -55,21 +55,21 @@ sub sec_log {
 
 /* sample handler, contains sample code for all handler types */
 sub sec_myhandler {
-   # perform an action based on the error code as above.
+    # perform an action based on the error code as above.
 
-   return (synth(800, "Blahblah")); # debug response
+    return (synth(800, "Blahblah")); # debug response
 
-   set req.http.X-VSF-Response = "we don't like your kind around here";
-   return (synth(801, "Rejected"));
+    set req.http.X-VSF-Response = "we don't like your kind around here";
+    return (synth(801, "Rejected"));
 
-   set req.http.X-VSF-Response = "http://u.rdir.it/hit/me/please";
-   return (synth(802, "Redirect"));
+    set req.http.X-VSF-Response = "http://u.rdir.it/hit/me/please";
+    return (synth(802, "Redirect"));
 
-   # send to sec_honey backend
-   return (synth(803, "Honeypot me"));
+    # send to sec_honey backend
+    return (synth(803, "Honeypot me"));
 
-   set req.http.X-VSF-Response = "<h1>Whatever</h1> so you think you can dance?";
-   return (synth(804, "Synthesize"));
+    set req.http.X-VSF-Response = "<h1>Whatever</h1> so you think you can dance?";
+    return (synth(804, "Synthesize"));
 
-   return (synth(805, "Drop"));
+    return (synth(805, "Drop"));
 }
