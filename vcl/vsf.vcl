@@ -1,3 +1,5 @@
+vcl 4.0;
+
 /* VSF main VCL file
  * XXX: Paths are hardcoded, otherwise they don't resolve. sorry.
  */
@@ -12,7 +14,7 @@ include "/etc/varnish/security/build/variables.vcl";
 
 sub vcl_recv {
     set req.http.X-VSF-ClientIP = client.ip;
-    set req.http.X-VSF-Method = req.request;
+    set req.http.X-VSF-Method = req.method;
     set req.http.X-VSF-Proto = req.proto;
     set req.http.X-VSF-URL = req.http.host + req.url;
     set req.http.X-VSF-UA = req.http.user-agent;
@@ -58,56 +60,56 @@ include "/etc/varnish/security/handlers.vcl";
  *  805 - Attempt to drop or reset the request (not implemented yet)
  *  808 - Raw synthetic deliver
  */
-sub vcl_error {
+sub vcl_synth {
     # are we insecure?
-    std.log("vcl_error");
+    std.log("vcl_synth");
 
     if (req.restarts == 0 && req.http.X-VSF-Client ) {
         # XXX: for some reason one log prints twice... bug?
         call sec_log;
-        if (obj.status == 800) {
-            set obj.http.X-VSF-Rule = req.http.X-VSF-Rule;
-            set obj.status = 200;
-        } elsif (obj.status == 801) {
-            set obj.status = 403;
+        if (resp.status == 800) {
+            set resp.http.X-VSF-Rule = req.http.X-VSF-Rule;
+            set resp.status = 200;
+        } elsif (resp.status == 801) {
+            set resp.status = 403;
             if (req.http.X-VSF-Response ) {
-                set obj.response = req.http.X-VSF-Response;
+                set resp.reason = req.http.X-VSF-Response;
             } else {
-                set obj.response = "Forbidden";
+                set resp.reason = "Forbidden";
             }
-        } elsif (obj.status == 802) {
-            set obj.status = 302;
-            #set obj.response = "Redirected for fun and profit";
-            if (obj.http.X-VSF-Response ) {
-                set obj.http.Location = obj.http.X-VSF-Response;
+        } elsif (resp.status == 802) {
+            set resp.status = 302;
+            #set resp.reason = "Redirected for fun and profit";
+            if (resp.http.X-VSF-Response ) {
+                set resp.http.Location = resp.http.X-VSF-Response;
             } else {
-                set obj.http.Location = "http://images.google.com/images?q=llama";
+                set resp.http.Location = "http://images.google.com/images?q=llama";
             }
             return (deliver);
-        } elsif (obj.status == 803) {
+        } elsif (resp.status == 803) {
             # restart on 2nd backend
             set req.http.X-VSF-Response = "honeypot me";
-            set req.backend = sec_honey;
+            set req.backend_hint = sec_honey;
             return (restart);
-        } elsif (obj.status == 804) {
-            set obj.status = 200;
-            set obj.response = "OK";
-            set obj.http.content-type = "text/html";
-            if (! obj.http.X-VSF-Response ) {
-                set obj.http.X-VSF-Response = "Synthetic";
+        } elsif (resp.status == 804) {
+            set resp.status = 200;
+            set resp.reason = "OK";
+            set resp.http.content-type = "text/html";
+            if (! resp.http.X-VSF-Response ) {
+                set resp.http.X-VSF-Response = "Synthetic";
             }
-            synthetic {"<html><body>
-"} + obj.http.X-VSF-Response + {"
+            synthetic({"<html><body>
+"} + resp.http.X-VSF-Response + {"
 </body></html>
-"};
+"});
             return (deliver);
-        } elsif (obj.status == 805) {
-            set obj.status = 501;
-            set obj.response = "Get outta here";
-        } elsif (obj.status == 808) {
-            set obj.status = 200;
-            set obj.response = "OK";
-            synthetic req.http.X-VSF-Response;
+        } elsif (resp.status == 805) {
+            set resp.status = 501;
+            set resp.reason = "Get outta here";
+        } elsif (resp.status == 808) {
+            set resp.status = 200;
+            set resp.reason = "OK";
+            synthetic(req.http.X-VSF-Response);
         }
         # fallthrough to other vcl_error's
     }
@@ -123,26 +125,26 @@ sub sec_passthru {
 
 /* Call this one for a catch-all */
 sub sec_general {
-    error 800 "Naugty, not nice!";
+    return (synth(800, "Naugty, not nice!"));
 }
 
 /* 403 rejected */
 sub sec_reject {
-    error 801 "Rejected";
+    return (synth(801, "Rejected"));
 }
 
 /* call this one for a redirect */
 sub sec_redirect {
-    error 802 "Redirect";
+    return (synth(802, "Redirect"));
 }
 
 sub sec_honeypot {
-    error 803 "Sexy Honey";
+    return (synth(803, "Sexy Honey"));
 }
 
 /* call this one for synthetic html */
 sub sec_synthtml {
-    error 804 "Synthetic";
+    return (synth(804, "Synthetic"));
 }
 
 /* TODO: drop the request..
@@ -157,7 +159,7 @@ sub sec_drop {
 
 sub sec_throttle {
     if (throttle.is_allowed("ip:" + client.ip, "3req/s, 10req/30s, 30req/5m") > 0s) {
-        error 429 "Calm down";
+        return (synth(429, "Calm down"));
     }
 }
 

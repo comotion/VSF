@@ -11,10 +11,6 @@
  * If you do not intend on changing these there is no need to read on.
  */
 
-C{
-      #include <syslog.h>
-}C
-
 sub sec_default_handler {
    # swap this one with your handler (see below)
    call sec_reject;
@@ -49,16 +45,8 @@ sub sec_log {
              + " [" + req.http.X-VSF-Module + "-" + req.http.X-VSF-RuleId + "]"
              + req.http.X-VSF-Client
              + " (" +  req.http.X-VSF-RuleName + ") ");
-         // call vsf_syslog
+    #std.syslog(6, "<VSF> " + now + " [" + req.http.X-VSF-RuleName + "/ruleid:" + req.http.X-VSF-RuleID + "]: " + req.http.X-VSF-ClientIP + " - " + req.http.X-VSF-Method + " http://" + req.http.X-VSF-URL + " " + req.http.X-VSF-Proto + " - " + req.http.X-VSF-UA);
 }
-
-/*
-sub vsf_syslog {
-	C{
-		syslog(LOG_INFO, "<VSF> %f [%s/ruleid:%s]: %s - %s http://%s %s - %s", VRT_r_now(sp), VRT_GetHdr(sp, HDR_REQ, "\015X-VSF-RuleName:"), VRT_GetHdr(sp, HDR_REQ, "\015X-VSF-RuleID:"), VRT_GetHdr(sp, HDR_REQ, "\017X-VSF-ClientIP:"), VRT_GetHdr(sp, HDR_REQ, "\015X-VSF-Method:"), VRT_GetHdr(sp, HDR_REQ, "\012X-VSF-URL:"), VRT_GetHdr(sp, HDR_REQ, "\014X-VSF-Proto:"), VRT_GetHdr(sp, HDR_REQ, "\011X-VSF-UA:"));
-	}C
-}
-*/
 
 
 /* You can define your own handlers here if you know a little vcl.
@@ -69,19 +57,19 @@ sub vsf_syslog {
 sub sec_myhandler {
    # perform an action based on the error code as above.
 
-   error 800 "Blahblah"; # debug response
+   return (synth(800, "Blahblah")); # debug response
 
    set req.http.X-VSF-Response = "we don't like your kind around here";
-   error 801 "Rejected";
+   return (synth(801, "Rejected"));
 
    set req.http.X-VSF-Response = "http://u.rdir.it/hit/me/please";
-   error 802 "Redirect";
+   return (synth(802, "Redirect"));
 
    # send to sec_honey backend
-   error 803 "Honeypot me";
+   return (synth(803, "Honeypot me"));
 
    set req.http.X-VSF-Response = "<h1>Whatever</h1> so you think you can dance?";
-   error 804 "Synthesize";
+   return (synth(804, "Synthesize"));
 
-   error 805 "Drop";
+   return (synth(805, "Drop"));
 }

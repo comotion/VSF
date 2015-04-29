@@ -9,7 +9,7 @@ sub vcl_recv {
         set req.http.X-VSF-Module =  "contenttype";
 
         # Checks for which content-types we accept in GET and HEAD request: application/x-www-form-urlencoded, multipart/form-data request and text/xml
-        if(( req.request == "GET" || req.request == "HEAD" )
+        if(( req.method == "GET" || req.method == "HEAD" )
         # Content-type: application/x-www-form-urlencoded; charset=utf-8
 #          && req.http.Content-Type ~ "(?:^(?:application\/x-www-form-urlencoded(?:;(?:\s?charset\s?=\s?[\w\d\-]{1,18})?)??$|multipart/form-data;)|text/xml)" ) {
           && req.http.Content-Type ~ "application\/x-www-form-urlencoded;(\s?charset\s?=\s?[\w\d\-]{1,18})?|multipart/form-data;|text/xml" ) {

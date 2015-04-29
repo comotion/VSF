@@ -1,7 +1,7 @@
 sub vcl_recv {
 	# Allowed methods
-	if (req.request != "GET" && req.request != "HEAD" && req.request != "PUT" &&
-	    req.request != "POST" && req.request != "DELETE") {
+	if (req.method != "GET" && req.method != "HEAD" && req.method != "PUT" &&
+	    req.method != "POST" && req.method != "DELETE") {
 		set req.http.X-VSF-RuleName = "Method Not Allowed";
 		set req.http.X-VSF-RuleID = "protocol.method-1";
 		call sec_handler;
@@ -43,7 +43,7 @@ sub vcl_recv {
 	# POST without Content-Length Header
 	# - http://mod-security.svn.sourceforge.net/ (modsecurity_crs_20_protocol_violations.conf)
 	# - http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html#sec9.5
-	if (req.request == "POST" && (!req.http.Content-Length || req.http.Content-Length ~ "^0+$")) {
+	if (req.method == "POST" && (!req.http.Content-Length || req.http.Content-Length ~ "^0+$")) {
 		set req.http.X-VSF-RuleName = "Empty Content-Length Header";
 		set req.http.X-VSF-RuleID = "protocol.clen-1";
 		call sec_handler;
@@ -52,7 +52,7 @@ sub vcl_recv {
 	# Non numeric Content-Length Header
 	# - http://mod-security.svn.sourceforge.net/ (modsecurity_crs_20_protocol_violations.conf)
 	# - http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.13 
-	if (req.request == "POST" && req.http.Content-Length !~ "^[0-9]+$") {
+	if (req.method == "POST" && req.http.Content-Length !~ "^[0-9]+$") {
 		set req.http.X-VSF-RuleName = "Non numeric Content-Length Header";
 		set req.http.X-VSF-RuleID = "protocol.clen-2";
 		call sec_handler;
@@ -60,7 +60,7 @@ sub vcl_recv {
 
 	# POST without Content-Type Header
 	# - http://mod-security.svn.sourceforge.net/ (modsecurity_crs_20_protocol_violations.conf)
-	if (req.request == "POST" && !req.http.Content-Type) {
+	if (req.method == "POST" && !req.http.Content-Type) {
 		set req.http.X-VSF-RuleName = "Empty Content-Type Header";
 		set req.http.X-VSF-RuleID = "protocol.ctype-1";
 		call sec_handler;
