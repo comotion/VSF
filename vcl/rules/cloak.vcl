@@ -8,21 +8,21 @@ sub sec_cloak {
    set req.http.X-VSF-Module =  "cloak";
    std.log("cloak status: " + req.http.X-VSF-Cloak-status);
 
-   error 801 "OK";
+   return (synth(801, "OK"));
 }
 
 
 sub vcl_deliver {
    # cloak
-   remove resp.http.Via;
-   remove resp.http.X-Varnish;
-   remove resp.http.Retry-after;
-   remove resp.http.Server;
-   remove resp.http.Vary;  # no leaking of vary
+   unset resp.http.Via;
+   unset resp.http.X-Varnish;
+   unset resp.http.Retry-after;
+   unset resp.http.Server;
+   unset resp.http.Vary;  # no leaking of vary
 
    # cant get rid these, they get added after deliver.
    # so much for proper cloaking
-   remove resp.http.Connection; 
+   unset resp.http.Connection; 
    
    # do some header reordering (-better support thru future vmod?)
    set req.http.co = resp.http.Connection;
@@ -81,7 +81,7 @@ sub vcl_recv {
       set req.http.X-VSF-RuleID = "1";
       set req.http.X-VSF-RuleInfo = "Htrosbif specific";
       # htrosbif attacks! lets try to confuse it
-      error 100 "continue";
+      return (synth(100, "continue"));
       call sec_handler;
    }
    # we restarted from deliver, we wanted the handler
@@ -93,7 +93,7 @@ sub vcl_recv {
 
 # Try to obscure the client-to-backend comms as well
 sub vcl_miss {
-   # remove bereq.http.User-agent;
-   remove bereq.http.X-Forwarded-For;
-   remove bereq.http.X-Varnish;
+   # unset bereq.http.User-agent;
+   unset bereq.http.X-Forwarded-For;
+   unset bereq.http.X-Varnish;
 }

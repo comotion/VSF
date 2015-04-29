@@ -10,12 +10,12 @@ sub vcl_recv {
    set req.http.X-VSF-Module =  "request";
 
 
-   if ( req.request == "PUT"
-#     || req.request == "POST"
-      || req.request == "TRACE"
-      || req.request == "OPTIONS"
-      || req.request == "CONNECT"
-      || req.request == "DELETE") {
+   if ( req.method == "PUT"
+#     || req.method == "POST"
+      || req.method == "TRACE"
+      || req.method == "OPTIONS"
+      || req.method == "CONNECT"
+      || req.method == "DELETE") {
                 set req.http.X-VSF-RuleName = "Blocked request methods";
                 set req.http.X-VSF-RuleID   = "1";
                 set req.http.X-VSF-RuleInfo = "Checks if someone tries use a blacklisted request method";
@@ -23,9 +23,9 @@ sub vcl_recv {
    }
 
    # request whitelist - this is strict and will break any non-conformant app
-   if (req.request != "GET"
-      && req.request != "POST"
-      && req.request != "HEAD"){
+   if (req.method != "GET"
+      && req.method != "POST"
+      && req.method != "HEAD"){
                 set req.http.X-VSF-RuleName = "Not in method whitelist";
                 set req.http.X-VSF-RuleID   = "2";
       call sec_request_sev1;
