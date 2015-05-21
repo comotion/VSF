@@ -4,10 +4,8 @@ vcl 4.0;
  * XXX: Paths are hardcoded, otherwise they don't resolve. sorry.
  */
 import std;
-import parsereq;
-import urlcode;
+import vsf;
 import vsthrottle;
-import shield;
 
 # clear all internal variables
 include "/etc/varnish/security/build/variables.vcl";
@@ -21,14 +19,8 @@ sub vcl_recv {
     if (req.url ~ "(i)^/[^?]+\.(css|js|jp(e)?g|ico|png|gif|txt|gz(ip)?|zip|rar|iso|lzma|bz(2)?|t(ar\.)?gz|t(ar\.)?bz)(\?.*)?$") {
         set req.http.X-VSF-Static = "y";
     } else {
-        parsereq.init();
-        if (parsereq.errcode() < 1) {
-            std.log("parsereq failed, boogs abound");
-        } else {
-            /* parse and decode the request */
-            set req.http.X-VSF-URL = urlcode.decode(req.url);
-            set req.http.X-VSF-Body = parsereq.post_body();
-        }
+        set req.http.X-VSF-URL = vsf.urldecode(req.url);
+        set req.http.X-VSF-Body = vsf.body();
     }
 
     # gather info about client
@@ -154,7 +146,7 @@ sub sec_synthtml {
  */
 sub sec_drop {
      call sec_log;
-     shield.conn_reset();
+     vsf.reset();
 }
 
 sub sec_throttle {

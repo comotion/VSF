@@ -22,45 +22,15 @@ scripts on a backend.
 Quick Start
 ===========
 
-To use VSF you will need the parsereq, shield, vsthrottle and urlcode vmods,
-which in turn require the Varnish 3.x source code to compile and run.
+To use VSF you will need the vsf and vsthrottle vmods.
 
-Build Varnish
--------------
-
-::
-
- apt-get install build-essential libpcre3-dev
- wget http://repo.varnish-cache.org/source/varnish-3.0.3.tar.gz
- tar xf varnish-3.0.3.tar.gz && cd varnish-3.0.3 && ./configure
- make -j3 && make install
- cd -
-
-then
-
-Build VMods
------------
-
-::
-
-   for mod in parsereq urlcode shield; do
-      cd libvmod-$mod
-      ./autogen.sh && VARNISHSRC=../varnish-3.0.3 ./configure && make -j3
-      make install
-      cd -
-   done
-
-now symlink the vcl directory into /etc/varnish/security
-
-::
+Now symlink the vcl directory into /etc/varnish/security::
 
   cd /etc/varnish && ln -s /PATH/TO/VSF/vcl security
 
-then you edit your default.vcl and add this line near the top:
+then you edit your default.vcl and add this line near the top::
 
-::
-
-	include "/etc/varnish/security/vsf.vcl";
+  include "/etc/varnish/security/vsf.vcl";
 
 At this point, you should only need to reload your varnish configuration.
 
