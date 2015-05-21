@@ -111,6 +111,7 @@ This work is based on the work of:
 As well as the authors of the following VMODs:
 
 * Syohei 'xcir' Tanaka:         https://github.com/xcir/libvmod-parsereq.git
+* Dag Haavi Finstad:            https://github.com/varnish/libvmod-vsthrottle
 * N. 'nand2' Deschildre:        https://github.com/nand2/libvmod-throttle.git
 * Rogier 'DocWilco' Mulhuijzen: https://github.com/fastly/libvmod-urlcode.git
 * Varnish Software ('martin'):  https://github.com/varnish/libvmod-shield.git

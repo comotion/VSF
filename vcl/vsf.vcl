@@ -6,7 +6,7 @@ vcl 4.0;
 import std;
 import parsereq;
 import urlcode;
-import throttle;
+import vsthrottle;
 import shield;
 
 # clear all internal variables
@@ -158,7 +158,9 @@ sub sec_drop {
 }
 
 sub sec_throttle {
-    if (throttle.is_allowed("ip:" + client.ip, "3req/s, 10req/30s, 30req/5m") > 0s) {
+    if (vsthrottle.is_denied(client.identity, 3, 1s) ||
+        vsthrottle.is_denied(client.identity, 10, 30s) ||
+        vsthrottle.is_denied(client.identity, 30, 5m)) {
         return (synth(429, "Calm down"));
     }
 }
