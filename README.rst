@@ -22,7 +22,7 @@ scripts on a backend.
 Quick Start
 ===========
 
-To use VSF you will need the parsereq, shield, throttle and urlcode vmods,
+To use VSF you will need the parsereq, shield, vsthrottle and urlcode vmods,
 which in turn require the Varnish 3.x source code to compile and run.
 
 Build Varnish
@@ -43,7 +43,7 @@ Build VMods
 
 ::
 
-   for mod in parsereq urlcode shield throttle; do
+   for mod in parsereq urlcode shield; do
       cd libvmod-$mod
       ./autogen.sh && VARNISHSRC=../varnish-3.0.3 ./configure && make -j3
       make install
