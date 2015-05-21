@@ -31,7 +31,8 @@ sub vcl_recv {
         + " (" + req.http.user-agent + ")";
 }
 
-# which modules to use, what to log, how to handle events and honeypot backend definition
+# which modules to use, what to log, how to handle events and honeypot
+# backend definition
 include "/etc/varnish/security/config.vcl";
 
 # fallthrough: clear all internal variables on security.vcl_recv exit
@@ -75,7 +76,8 @@ sub vcl_synth {
             if (resp.http.X-VSF-Response ) {
                 set resp.http.Location = resp.http.X-VSF-Response;
             } else {
-                set resp.http.Location = "http://images.google.com/images?q=llama";
+                set resp.http.Location =
+		    "http://images.google.com/images?q=llama";
             }
             return (deliver);
         } elsif (resp.status == 803) {
@@ -117,7 +119,7 @@ sub sec_passthru {
 
 /* Call this one for a catch-all */
 sub sec_general {
-    return (synth(800, "Naugty, not nice!"));
+    return (synth(800, "Naughty, not nice!"));
 }
 
 /* 403 rejected */
@@ -171,7 +173,8 @@ sub sec_magichandler {
 /* You can define how to handle the different severity levels. */
 sub sec_handler {
     ## retrieve the rule info
-    set req.http.X-VSF-Rule = req.http.X-VSF-Module + "-" + req.http.X-VSF-RuleID;
+    set req.http.X-VSF-Rule = req.http.X-VSF-Module + "-" +
+        req.http.X-VSF-RuleID;
     if (req.http.X-VSF-Rule ~ "^(fooobs)$") {
         # squelch this rule
     } else {
@@ -188,15 +191,18 @@ sub sec_handler {
 
         # this variable always present, so rule always false
         if (!req.http.X-VSF-Client ) {
-            # all functions must be used in vcl, fool compiler by putting them here
+            # all functions must be used in vcl, fool compiler by putting
+            # them here
 
             std.log("security.vcl WONTREACH: available sec handlers");
             #  the handlers are defined in main.vcl along with the error codes
             #      handler name  # code # purpose
-            call sec_general;    # 800  # debug handler - delivers X-VSF-Rule to client
+            call sec_general;    # 800  # debug handler - delivers
+                                        # X-VSF-Rule to client
             call sec_reject;     # 801  # 403 reject with message
             call sec_redirect;   # 802  # 302 redirect
-            call sec_honeypot;   # 803  # restart request with honeypot backend
+            call sec_honeypot;   # 803  # restart request with honeypot
+                                        # backend
             call sec_synthtml;   # 804  # synthesize a response
             call sec_drop;       # 805  # drop the request (not implemented)
             call sec_myhandler;  # any  # do your own thing
@@ -204,7 +210,8 @@ sub sec_handler {
             call sec_throttle;
             ## note! the passthru handler really does pass thru
             # - you must make sure it is the last thing called
-            call sec_passthru;   # n/a  # log client and pass thru to default error logic
+            call sec_passthru;   # n/a  # log client and pass thru to
+                                        # default error logic
         }
     }
 }
