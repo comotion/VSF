@@ -148,7 +148,7 @@ sub sec_synthtml {
  */
 sub sec_drop {
      call sec_log;
-     vsf.reset();
+     vsf.conn_reset();
 }
 
 sub sec_throttle {
