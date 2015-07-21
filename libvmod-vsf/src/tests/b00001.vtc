@@ -1,0 +1,19 @@
+varnishtest "Test vsf.conn_reset()"
+
+server s1 {
+	rxreq
+	txresp
+} -start
+
+varnish v1 -vcl+backend {
+	import vsf from "${vmod_topbuild}/src/.libs/libvmod_vsf.so";
+
+	sub vcl_recv {
+		vsf.conn_reset();
+	}
+} -start
+
+client c1 {
+	txreq
+	expect_close
+} -run

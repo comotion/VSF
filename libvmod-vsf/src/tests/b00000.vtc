@@ -1,0 +1,20 @@
+varnishtest "Test vsf.urldecode()"
+
+server s1 {
+	rxreq
+	txresp
+} -start
+
+varnish v1 -vcl+backend {
+	import vsf from "${vmod_topbuild}/src/.libs/libvmod_vsf.so";
+
+	sub vcl_deliver {
+		set resp.http.decoded = vsf.urldecode(req.url);
+	}
+} -start
+
+client c1 {
+	txreq -url "/?p=foo+bar&q=%2F"
+	rxresp
+	expect resp.http.decoded == "/?p=foo bar&q=/"
+} -run

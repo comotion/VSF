@@ -1,0 +1,22 @@
+varnishtest "Test vsf.body()"
+
+server s1 {
+	rxreq
+	expect req.http.body == "foo bar!"
+	txresp
+} -start
+
+varnish v1 -vcl+backend {
+	import vsf from "${vmod_topbuild}/src/.libs/libvmod_vsf.so";
+
+	sub vcl_recv {
+		set req.http.body = vsf.body(2048B);
+	}
+} -start
+
+client c1 {
+	txreq -req POST \
+	    -hdr "Content-Type: application/x-www-form-urlencoded" \
+	    -body {foo+bar%21}
+	rxresp
+} -run
