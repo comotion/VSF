@@ -10,10 +10,24 @@ varnish v1 -vcl+backend {
 
 	sub vcl_recv {
 		vsf.conn_reset();
+		vsf.conn_reset();
 	}
+
+	sub vcl_deliver {
+		vsf.conn_reset();
+	}
+} -start
+
+logexpect l1 -v v1 {
+	expect * 1001 Error \
+	    "vsf.conn_reset: Invalid file descriptor"
+	expect * 1001 Error \
+	    "vsf.conn_reset: Can only be called from vcl_recv{}"
 } -start
 
 client c1 {
 	txreq
 	expect_close
 } -run
+
+logexpect l1 -wait
