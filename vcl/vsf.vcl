@@ -152,9 +152,9 @@ sub sec_drop {
 }
 
 sub sec_throttle {
-    if (vsthrottle.is_denied(client.identity, 3, 1s) ||
-        vsthrottle.is_denied(client.identity, 10, 30s) ||
-        vsthrottle.is_denied(client.identity, 30, 5m)) {
+    if (vsthrottle.is_denied("ip:" + client.ip, 3, 1s) ||
+        vsthrottle.is_denied("ip:" + client.ip, 10, 30s) ||
+        vsthrottle.is_denied("ip:" + client.ip, 30, 5m)) {
         return (synth(429, "Calm down"));
     }
 }
