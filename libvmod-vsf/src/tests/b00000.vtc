@@ -1,6 +1,6 @@
 varnishtest "Test vsf.urldecode()"
 
-server s1 {
+server s1 -repeat 2 {
 	rxreq
 	txresp
 } -start
@@ -17,4 +17,7 @@ client c1 {
 	txreq -url "/?p=foo+bar&q=%2F"
 	rxresp
 	expect resp.http.decoded == "/?p=foo bar&q=/"
+	txreq -url "/?p=%e6%97%a5%e6%9c%ac"
+	rxresp
+	expect resp.http.decoded == "/?p=日本"
 } -run
