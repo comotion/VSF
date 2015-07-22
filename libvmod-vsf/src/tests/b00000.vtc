@@ -13,6 +13,10 @@ varnish v1 -vcl+backend {
 	}
 } -start
 
+logexpect l1 -v v1 {
+	expect * 1004 Error "vsf.urldecode: No input"
+} -start
+
 client c1 {
 	txreq -hdr "encoded: foo+bar%21"
 	rxresp
@@ -24,3 +28,5 @@ client c1 {
 	rxresp
 	expect resp.http.decoded == ""
 } -run
+
+logexpect l1 -wait
