@@ -94,7 +94,7 @@ vsf_urldecode(char *dst, const char *src, size_t siz)
 		do {
 			if (*s == '%' && s[1] && s[2]) {
 				if (isxdigit(s[1]) && isxdigit(s[2])) {
-#define ORD(c)	(c <= '9' ? c - '0' : toupper(c) - 'A' + 10)
+#define ORD(c)	((c) >= 'A' ? ((c) & 0xDF) - 'A' + 10 : (c) - '0')
 					*d++ = ORD(s[1]) << 4 | ORD(s[2]);
 					s += 3;
 #undef ORD
