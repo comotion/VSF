@@ -116,8 +116,8 @@ vsf_urldecode(char *dst, const char *src, size_t siz)
 	return (s - src - 1);
 }
 
-VCL_STRING
-vmod_body(VRT_CTX, struct vmod_priv * priv, VCL_BYTES maxsize)
+VCL_STRING __match_proto__(td_vsf_body)
+vmod_body(VRT_CTX, struct vmod_priv *priv, VCL_BYTES maxsize)
 {
 	struct vsb *vsb;
 	const char *p;
@@ -152,7 +152,26 @@ vmod_body(VRT_CTX, struct vmod_priv * priv, VCL_BYTES maxsize)
 	return (VSB_data(vsb));
 }
 
-VCL_STRING
+VCL_VOID __match_proto__(td_vsf_conn_reset)
+vmod_conn_reset(VRT_CTX)
+{
+	CHECK_OBJ_NOTNULL(ctx, VRT_CTX_MAGIC);
+	if (ctx->method != VCL_MET_RECV) {
+		VSLb(ctx->vsl, SLT_Error,
+		    "vsf.conn_reset: Can only be called from vcl_recv{}");
+		return;
+	}
+	if (ctx->req->sp->fd < 0) {
+		VSLb(ctx->vsl, SLT_Error,
+		    "vsf.conn_reset: Invalid file descriptor");
+		return;
+	}
+	ctx->req->restarts = cache_param->max_restarts;
+	VTCP_linger(ctx->req->sp->fd, 1);
+	SES_Close(ctx->req->sp, SC_RESP_CLOSE);
+}
+
+VCL_STRING __match_proto__(td_vsf_urldecode)
 vmod_urldecode(VRT_CTX, VCL_STRING s)
 {
 	unsigned u, v;
@@ -176,23 +195,4 @@ vmod_urldecode(VRT_CTX, VCL_STRING s)
 		WS_Release(ctx->ws, v + 1);
 		return (p);
 	}
-}
-
-void
-vmod_conn_reset(VRT_CTX)
-{
-	CHECK_OBJ_NOTNULL(ctx, VRT_CTX_MAGIC);
-	if (ctx->method != VCL_MET_RECV) {
-		VSLb(ctx->vsl, SLT_Error,
-		    "vsf.conn_reset: Can only be called from vcl_recv{}");
-		return;
-	}
-	if (ctx->req->sp->fd < 0) {
-		VSLb(ctx->vsl, SLT_Error,
-		    "vsf.conn_reset: Invalid file descriptor");
-		return;
-	}
-	ctx->req->restarts = cache_param->max_restarts;
-	VTCP_linger(ctx->req->sp->fd, 1);
-	SES_Close(ctx->req->sp, SC_RESP_CLOSE);
 }

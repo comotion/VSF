@@ -28,6 +28,7 @@ $Module vsf 3 Varnish Security Firewall
 
 $Function STRING body(PRIV_TASK, BYTES)
 
+$Function VOID conn_reset()
+
 $Function STRING urldecode(STRING)
 
-$Function VOID conn_reset()
