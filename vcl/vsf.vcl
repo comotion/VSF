@@ -20,7 +20,7 @@ sub vcl_recv {
         set req.http.X-VSF-Static = "y";
     } else {
         set req.http.X-VSF-URL = vsf.urldecode(req.url);
-        set req.http.X-VSF-Body = vsf.body();
+        set req.http.X-VSF-Body = vsf.body(512KB);
     }
 
     # gather info about client
