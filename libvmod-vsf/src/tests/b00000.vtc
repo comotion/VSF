@@ -1,6 +1,6 @@
 varnishtest "Test vsf.urldecode()"
 
-server s1 -repeat 2 {
+server s1 {
 	rxreq
 	txresp
 } -start
@@ -9,15 +9,18 @@ varnish v1 -vcl+backend {
 	import vsf from "${vmod_topbuild}/src/.libs/libvmod_vsf.so";
 
 	sub vcl_deliver {
-		set resp.http.decoded = vsf.urldecode(req.url);
+		set resp.http.decoded = vsf.urldecode(req.http.encoded);
 	}
 } -start
 
 client c1 {
-	txreq -url "/?p=foo+bar&q=%2F"
+	txreq -hdr "encoded: foo+bar%21"
 	rxresp
-	expect resp.http.decoded == "/?p=foo bar&q=/"
-	txreq -url "/?p=%e6%97%a5%e6%9c%ac"
+	expect resp.http.decoded == "foo bar!"
+	txreq -hdr "encoded: %E6%97%A5%e6%9c%ac"
 	rxresp
-	expect resp.http.decoded == "/?p=日本"
+	expect resp.http.decoded == "日本"
+	txreq
+	rxresp
+	expect resp.http.decoded == ""
 } -run
