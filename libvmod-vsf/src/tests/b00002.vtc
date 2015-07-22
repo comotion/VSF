@@ -4,6 +4,9 @@ server s1 {
 	rxreq
 	expect req.http.body == "foo bar!"
 	txresp
+	rxreq
+	expect req.http.body == ""
+	txresp
 } -start
 
 varnish v1 -vcl+backend {
@@ -14,9 +17,24 @@ varnish v1 -vcl+backend {
 	}
 } -start
 
+logexpect l1 -v v1 {
+	expect * 1003 Error \
+	    "vsf.body: Unsupported form encoding \(multipart/form-data"
+} -start
+
 client c1 {
 	txreq -req POST \
 	    -hdr "Content-Type: application/x-www-form-urlencoded" \
 	    -body {foo+bar%21}
 	rxresp
+	txreq -req POST \
+	    -hdr "Content-Type: multipart/form-data; boundary=random" \
+	    -body {--random
+	    Content-Disposition: form-data; name="something"
+
+	    other
+	    --random--}
+	rxresp
 } -run
+
+logexpect l1 -wait
