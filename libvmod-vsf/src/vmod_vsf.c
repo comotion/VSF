@@ -194,5 +194,5 @@ vmod_conn_reset(VRT_CTX)
 	}
 	ctx->req->restarts = cache_param->max_restarts;
 	VTCP_linger(ctx->req->sp->fd, 1);
-	SES_Close(ctx->req->sp, SC_NULL);
+	SES_Close(ctx->req->sp, SC_RESP_CLOSE);
 }
