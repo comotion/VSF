@@ -82,7 +82,7 @@ vsf_iter_req_body(struct req *req, void *priv, void *ptr, size_t len)
 	return (0);
 }
 
-/* urldecode function based on strlcpy from Todd C. Miller */
+/* Partially based on strlcpy from Todd C. Miller */
 static size_t
 vsf_urldecode(char *dst, const char *src, size_t siz)
 {
