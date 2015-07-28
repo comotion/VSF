@@ -145,8 +145,6 @@ vmod_body(VRT_CTX, struct vmod_priv *priv, VCL_BYTES maxsize)
 		return (NULL);
 	}
 	AZ(VSB_finish(vsb));
-	vsb->s_len = vsf_urldecode(VSB_data(vsb), VSB_data(vsb),
-	    VSB_len(vsb));
 	priv->free = (vmod_priv_free_f *)VSB_delete;
 	priv->priv = vsb;
 	return (VSB_data(vsb));

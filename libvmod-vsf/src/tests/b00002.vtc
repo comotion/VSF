@@ -2,7 +2,7 @@ varnishtest "Test vsf.body()"
 
 server s1 {
 	rxreq
-	expect req.http.body == "foo bar!"
+	expect req.http.body == "foo+bar%21"
 	txresp
 	rxreq
 	expect req.http.body == ""
