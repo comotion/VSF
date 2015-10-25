@@ -11,6 +11,12 @@ import shield;
 include "/etc/varnish/security/build/variables.vcl";
 
 sub vcl_recv {
+    #Remove CloudFlare cookies
+    # Remove has_js and CloudFlare/Google Analytics __* cookies.
+      set req.http.Cookie = regsuball(req.http.Cookie, "(^|;\s*)(_[_a-z]+|has_js)=[^;]*", "");
+      # Remove a ";" prefix, if present.
+    set req.http.Cookie = regsub(req.http.Cookie, "^;\s*", "");
+
     # Make Wordpress friendly
     if (req.url ~ "(xmlrpc.php|wp-cron.php|async-upload.php|admin-ajax.php)" || (req.http.cookie ~ "wordpress_logged_in" ) || (req.http.User-Agent ~ "((?i)pingdom)")) {
 	return (pass);
