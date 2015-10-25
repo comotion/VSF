@@ -21,7 +21,7 @@ sub vcl_recv {
     if (req.url ~ "(xmlrpc.php|wp-cron.php|async-upload.php|admin-ajax.php)" || (req.http.cookie ~ "wordpress_logged_in" )) {
 	return (pass);
     }
-    if (req.url ~ "(feed|robots.txt)" || (req.http.User-Agent ~ "(?i)(bingbot|googlebot|pingdom)")) {
+    if (req.url ~ "(/feed/|robots.txt)" || (req.http.User-Agent ~ "(?i)(bingbot|googlebot|pingdom)")) {
         return (lookup);
     }
 
