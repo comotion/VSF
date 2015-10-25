@@ -20,7 +20,7 @@ sub vcl_recv {
     set req.http.X-VSF-Proto = req.proto;
     set req.http.X-VSF-URL = req.http.host + req.url;
     set req.http.X-VSF-UA = req.http.user-agent;
-    if (req.url ~ "(i)^/[^?]+\.(css|js|jp(e)?g|ico|png|gif|txt|gz(ip)?|zip|rar|iso|lzma|bz(2)?|t(ar\.)?gz|t(ar\.)?bz)(\?.*)?$") {
+    if (req.url ~ "(i)^/[^?]+\.(css|js|jp(e)?g|ico|svg|cur|ttf|woff(2?)|png|gif|txt|gz(ip)?|zip|rar|iso|lzma|bz(2)?|t(ar\.)?gz|t(ar\.)?bz)(\?.*)?$") {
         set req.http.X-VSF-Static = "y";
     } else {
         parsereq.init();
