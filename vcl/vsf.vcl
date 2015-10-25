@@ -11,6 +11,10 @@ import shield;
 include "/etc/varnish/security/build/variables.vcl";
 
 sub vcl_recv {
+    # Make Wordpress friendly
+    if (req.url ~ "(wp-cron.php|wp-admin|async-upload.php|wp-content)") {
+	return (pass);
+    }
     set req.http.X-VSF-ClientIP = client.ip;
     set req.http.X-VSF-Method = req.request;
     set req.http.X-VSF-Proto = req.proto;
