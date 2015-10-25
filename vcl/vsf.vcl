@@ -12,7 +12,7 @@ include "/etc/varnish/security/build/variables.vcl";
 
 sub vcl_recv {
     # Make Wordpress friendly
-    if (req.url ~ "(wp-cron.php|async-upload.php|admin-ajax.php)" || (req.http.cookie ~ "wordpress_logged_in" )) {
+    if (req.url ~ "(wp-cron.php|async-upload.php|admin-ajax.php)" || (req.http.cookie ~ "wordpress_logged_in" ) || (req.http.User-Agent ~ "((?i)pingdom)")) {
 	return (pass);
     }
     set req.http.X-VSF-ClientIP = client.ip;
