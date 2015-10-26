@@ -17,7 +17,7 @@ sub vcl_recv {
 
 	# Empty Accept Header
 	# - http://mod-security.svn.sourceforge.net/ (modsecurity_crs_21_protocol_anomalies.conf)
-	if (!req.http.Accept) {
+	if (req.http.Accept && req.http.Accept ~ "^ *$") {
 		set req.http.X-VSF-RuleName = "Empty Accept Header";
 		set req.http.X-VSF-RuleID = "protocol.accpt-1";
 		call sec_handler;
