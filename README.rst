@@ -68,6 +68,12 @@ Known Issues
 
 Let us know! http://github.com/comotion/VSF/issues
 
+Media
+=====
+
+* VSF on Init Tech Days 2014: https://www.youtube.com/watch?v=_zbk9_phkXg&feature=youtu.be
+* VSF at Hack.lu 2012: http://archive.hack.lu/2012/VSF-hacklu2012.pdf
+
 References
 ==========
 
