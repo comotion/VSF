@@ -15,6 +15,7 @@ sub sec_default_handler {
     # swap this one with your handler (see below)
     call sec_reject;
 
+    #call sec_passthru;  #      do nothing but log the rule and deliver the request
     #call sec_general;   # 800  # debug handler - delivers X-VSF-Rule to client
     #call sec_reject;    # 801  # 403 reject with message
     #call sec_redirect;  # 802  # 302 redirect
