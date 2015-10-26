@@ -54,7 +54,7 @@ sub vcl_recv {
 
 	# Windows files
 	# - http://mod-security.svn.sourceforge.net/ (modsecurity_crs_40_generic_attacks.conf)
-	if (req.url ~ "(?i)((cmd(32)?|nc|net|telnet|wsh|ftp|nmap)\.exe|\.(db|com|bat|reg|asa))") {
+	if (req.url ~ "(?i)((cmd(32)?|nc|net|telnet|wsh|ftp|nmap)\.exe|\.(db|bat|reg|asa))") {
 		set req.http.X-VSF-RuleName = "Windows File";
 		set req.http.X-VSF-RuleID = "path.win-2";
 		call sec_handler;
