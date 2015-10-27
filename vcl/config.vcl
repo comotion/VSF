@@ -25,11 +25,18 @@ include "/etc/varnish/security/rules/content-encoding.vcl";
 include "/etc/varnish/security/rules/content-type.vcl";
 include "/etc/varnish/security/rules/localfiles.vcl";
 
+# you may or may not want the following rulesets:
+
+# DoS connection throttling
+#include "/etc/varnish/security/rules/dos.vcl";
+
 # check this module, it is rather harsh
 #include "/etc/varnish/security/rules/request.vcl";
 
-# you may or may not want these
+# robot countermeasures (edit robot handler to respond to robots)
 #include "/etc/varnish/security/rules/robots.vcl";
+
+# cloak the web server and the clients
 #include "/etc/varnish/security/rules/cloak.vcl";
 
 ## User agent checks may be a little too restrictive for your tastes.
