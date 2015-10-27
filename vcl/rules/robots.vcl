@@ -17,7 +17,7 @@ sub sec_robot {
     set req.http.X-VSF-Response = 
 		{"User-agent: *
 Disallow: / "};
-    return (synth(808,"Warning robatas"));
+    error 808 "Warning robatas";
 }
 
 sub sec_robots_are_ok {
