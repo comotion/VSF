@@ -85,3 +85,12 @@ sub sec_myhandler {
 
    error 805 "Drop";
 }
+
+# what 
+sub sec_throttle {
+	 # respond with an error code
+	 error 429 "Too many connections";
+	 # or you can drop the connection
+	 # shield.conn_reset();
+}
+

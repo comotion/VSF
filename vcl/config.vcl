@@ -25,6 +25,9 @@ include "/etc/varnish/security/rules/content-encoding.vcl";
 include "/etc/varnish/security/rules/content-type.vcl";
 include "/etc/varnish/security/rules/localfiles.vcl";
 
+# throttling for denial of service attacks
+# include "/etc/varnish/security/rules/dos.vcl";
+
 # check this module, it is rather harsh
 #include "/etc/varnish/security/rules/request.vcl";
 
