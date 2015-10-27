@@ -10,6 +10,8 @@ import vsthrottle;
 # clear all internal variables
 include "/etc/varnish/security/build/variables.vcl";
 
+include "/etc/varnish/security/local.vcl";
+
 sub vcl_recv {
     set req.http.X-VSF-ClientIP = client.ip;
     set req.http.X-VSF-Method = req.method;

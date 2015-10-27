@@ -1,0 +1,5 @@
+
+sub vcl_recv {
+    /* put your site specific custom rules here, and name this file local.vcl,
+     and the rules will be evaluated before the VSF logic */
+}

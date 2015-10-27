@@ -32,6 +32,11 @@ then you edit your default.vcl and add this line near the top::
 
   include "/etc/varnish/security/vsf.vcl";
 
+You should also create `local.vcl`, which is where you put any custom VCL
+you want to happen before VSF logic::
+
+  cd /etc/varnish/security && cp local.vcl.example local.vcl
+
 At this point, you should only need to reload your varnish configuration.
 
 You may want to modify config.vcl to fit your needs. 
