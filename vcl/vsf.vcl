@@ -13,6 +13,7 @@ include "/etc/varnish/security/build/variables.vcl";
 include "/etc/varnish/security/local.vcl";
 
 sub vcl_recv {
+    set req.http.X-VSF-Actual-IP = regsub(req.http.X-Forwarded-For, "[, ].*$", "");
     set req.http.X-VSF-ClientIP = client.ip;
     set req.http.X-VSF-Method = req.method;
     set req.http.X-VSF-Proto = req.proto;
@@ -143,21 +144,18 @@ sub sec_synthtml {
     return (synth(804, "Synthetic"));
 }
 
-/* TODO: drop the request..
- *    the plan is to implement VMOD that either
- *    - sends an RST and kills the client connection OR
- *    - kills the client connection silently
- */
 sub sec_drop {
      call sec_log;
      vsf.conn_reset();
 }
 
 sub sec_throttle {
-    if (vsthrottle.is_denied("ip:" + client.ip, 3, 1s) ||
-        vsthrottle.is_denied("ip:" + client.ip, 10, 30s) ||
-        vsthrottle.is_denied("ip:" + client.ip, 30, 5m)) {
+    if (vsthrottle.is_denied(req.http.X-Actual-IP, 3, 1s) ||
+        vsthrottle.is_denied(req.http.X-Actual-IP, 10, 30s) ||
+        vsthrottle.is_denied(req.http.X-Actual-IP, 30, 5m)) {
         return (synth(429, "Calm down"));
+        # or reset the connection
+				#vsf.conn_reset();
     }
 }
 

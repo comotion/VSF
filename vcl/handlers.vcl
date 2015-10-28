@@ -76,10 +76,3 @@ sub sec_myhandler {
 }
 
 
-/* Define your preferred way to throttle connections for the dos.vcl rules */
-sub sec_throttle {
-    # send a 429 status code
-    return (synth(429, "Too Many Requests"));
-    # or be rough and reset the connection, without further communication
-    vsf.conn_reset();
-}
