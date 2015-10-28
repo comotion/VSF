@@ -30,7 +30,7 @@ sub vcl_recv {
         set req.http.X-VSF-RuleID = "protocol.ua-1";
         call sec_handler;
     }
-http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html#sec9.5
+
     # Invalid Connection Header
     # - http://mod-security.svn.sourceforge.net/ (modsecurity_crs_20_protocol_violations.conf)
     # - http://www.bad-behavior.ioerror.us/documentation/how-it-works/
