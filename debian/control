@@ -27,12 +27,12 @@ Description: Varnish Security Firewall
  The Varnish Security Firewall is a Web Application Firewall written
  using the Varnish Control Language and a sprinkling of Varnish Modules.
  .
-VSF aims to provide a standardized framework for security-related filters,
-several core rule-sets and a limited set of default 'handlers', 
-for instance CGI scripts to call upon when Bad Stuff happens. 
-This is done mainly by using clever VCL, and with as little impact on 
-normal Varnish Cache operation as possible. 
-The incident handlers even can be CGI-like scripts on a backend.
-.
-VSF is a flexible and scalable WAF to protect your web applications.
+ VSF aims to provide a standardized framework for security-related filters,
+ several core rule-sets and a limited set of default 'handlers', 
+ for instance CGI scripts to call upon when Bad Stuff happens. 
+ This is done mainly by using clever VCL, and with as little impact on 
+ normal Varnish Cache operation as possible. 
+ The incident handlers even can be CGI-like scripts on a backend.
+ .
+ VSF is a flexible and scalable WAF to protect your web applications.
 
