@@ -1,0 +1,2 @@
+etc/varnish/security
+var/lib/varnish/vmods
