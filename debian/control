@@ -6,11 +6,10 @@ Uploaders: Stig Sandbeck Mathisen <ssm@debian.org>,
            Kacper Wysocki <comotion@delta9.pl>
 Build-Depends:
  debhelper (>= 9),
- dh-systemd,
  libvarnishapi-dev,
  autoconf,
  libtool,
- pkgconfig,
+ pkg-config,
  python-docutils,
  python | python-all | python-dev | python-all-dev,
 Standards-Version: 3.9.5
