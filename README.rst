@@ -22,7 +22,18 @@ scripts on a backend.
 Quick Start
 ===========
 
-To use VSF you will need the vsf and vsthrottle vmods.
+To use VSF you will need the vsf and vsthrottle vmods, as well as Varnish 4.x.
+Install instructions vary by OS and distro, but are roughly::
+
+  # install build dependencies
+  apt-get install varnish libvarnishapi-dev autoconf libtool pkgconfig python-docutils
+
+  # build vmods
+  cd libvmod-vsf && ./autogen.sh && ./configure && make
+  sudo make install
+  cd ../..
+  git clone https://github.com/varnish/libvmod-vsthrottle.git
+  cd libvmod-vsthrottle && ./configure && make
 
 Now symlink the vcl directory into /etc/varnish/security::
 
