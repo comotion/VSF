@@ -34,6 +34,16 @@ Install instructions vary by OS and distro, but are roughly::
   cd ../..
   git clone https://github.com/varnish/libvmod-vsthrottle.git
   cd libvmod-vsthrottle && ./configure && make
+  sudo make install
+  cd ../..
+  git clone https://github.com/fgsch/libvmod-utf8.git
+  cd libvmod-utf8 && git submodule init && git submodule fetch
+  cd utf8proc && make && sudo make install
+  # you might have to add /usr/local/lib into your /etc/ld.so.conf now
+  cd ../..
+  ./configure && make
+  sudo make install
+   
 
 Now symlink the vcl directory into /etc/varnish/security::
 

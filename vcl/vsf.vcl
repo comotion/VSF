@@ -5,6 +5,7 @@ vcl 4.0;
  */
 import std;
 import vsf;
+import utf8;
 import vsthrottle;
 
 # clear all internal variables
@@ -19,11 +20,11 @@ sub vcl_recv {
     set req.http.X-VSF-Proto = req.proto;
     set req.http.X-VSF-URL = req.http.host + req.url;
     set req.http.X-VSF-UA = req.http.user-agent;
+    #STABLE | COMPAT | COMPOSE | IGNORE | NLF2LF | LUMP | STRIPMARK
+    set req.http.X-VSF-URL = utf8.transform(vsf.urldecode(req.url), 12718);
+    set req.http.X-VSF-Body = utf8.transform(vsf.body(512KB), 12718);
     if (req.url ~ "(i)^/[^?]+\.(css|js|jp(e)?g|ico|png|gif|txt|gz(ip)?|zip|rar|iso|lzma|bz(2)?|t(ar\.)?gz|t(ar\.)?bz)(\?.*)?$") {
         set req.http.X-VSF-Static = "y";
-    } else {
-        set req.http.X-VSF-URL = vsf.urldecode(req.url);
-        set req.http.X-VSF-Body = vsf.body(512KB);
     }
 
     # gather info about client
@@ -57,11 +58,7 @@ include "/etc/varnish/security/handlers.vcl";
  *  808 - Raw synthetic deliver
  */
 sub vcl_synth {
-    # are we insecure?
-    std.log("vcl_synth");
-
     if (req.restarts == 0 && req.http.X-VSF-Client ) {
-        # XXX: for some reason one log prints twice... bug?
         call sec_log;
         if (resp.status == 800) {
             set resp.http.X-VSF-Rule = req.http.X-VSF-Rule;
