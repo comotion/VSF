@@ -6,7 +6,6 @@ vcl 4.0;
 import std;
 import vsf;
 import utf8;
-import vsthrottle;
 
 # clear all internal variables
 include "/etc/varnish/security/build/variables.vcl";
@@ -146,16 +145,6 @@ sub sec_drop {
      vsf.conn_reset();
 }
 
-sub sec_throttle {
-    if (vsthrottle.is_denied(req.http.X-Actual-IP, 3, 1s) ||
-        vsthrottle.is_denied(req.http.X-Actual-IP, 10, 30s) ||
-        vsthrottle.is_denied(req.http.X-Actual-IP, 30, 5m)) {
-        return (synth(429, "Calm down"));
-        # or reset the connection
-				#vsf.conn_reset();
-    }
-}
-
 sub sec_magichandler {
     if (!req.http.X-VSF-Response ) {
         ## The default attack response message, can be overridden by rules.
@@ -204,7 +193,6 @@ sub sec_handler {
             call sec_drop;       # 805  # drop the request (not implemented)
             call sec_myhandler;  # any  # do your own thing
             call sec_default_handler;   # fallback handler
-            call sec_throttle;
             ## note! the passthru handler really does pass thru
             # - you must make sure it is the last thing called
             call sec_passthru;   # n/a  # log client and pass thru to

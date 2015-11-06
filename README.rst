@@ -32,13 +32,14 @@ Install instructions vary by OS and distro, but are roughly::
   cd libvmod-vsf && ./autogen.sh && ./configure && make
   sudo make install
   cd ../..
-  git clone https://github.com/varnish/libvmod-vsthrottle.git
-  cd libvmod-vsthrottle && ./configure && make
-  sudo make install
-  cd ../..
   git clone https://github.com/fgsch/libvmod-utf8.git
   cd libvmod-utf8 && git submodule init && git submodule fetch
   ./configure && make
+  sudo make install
+  cd ../..
+  # (optional, for rules/dos.vcl) install vmod-vsthrottle
+  git clone https://github.com/varnish/libvmod-vsthrottle.git
+  cd libvmod-vsthrottle && ./configure && make
   sudo make install
    
 
