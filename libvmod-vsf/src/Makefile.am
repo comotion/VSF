@@ -12,6 +12,11 @@ nodist_libvmod_vsf_la_SOURCES = \
 	vcc_if.c \
 	vcc_if.h
 
+libvmod_vsf_la_CFLAGS += -I$(top_srcdir)/../utf8proc -std=c99
+libvmod_vsf_la_SOURCES += \
+	$(top_srcdir)/../utf8proc/utf8proc.c \
+	$(top_srcdir)/../utf8proc/utf8proc.h
+
 dist_man_MANS = vmod_vsf.3
 
 VTC_LOG_COMPILER = $(VARNISHTEST) -v -i \

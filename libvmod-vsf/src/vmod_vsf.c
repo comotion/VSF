@@ -56,11 +56,14 @@
  */
 
 #include <ctype.h>
+#include <stdlib.h>
+#include <utf8proc.h>
 
 #include "cache/cache.h"
 
 #include "vrt.h"
 #include "vcl.h"
+#include "vsa.h"
 
 #include "vcc_if.h"
 
@@ -193,4 +196,45 @@ vmod_urldecode(VRT_CTX, VCL_STRING s)
 		WS_Release(ctx->ws, v + 1);
 		return (p);
 	}
+}
+
+
+VCL_STRING __match_proto__(td_utf8_transform)
+vmod_normalize(VRT_CTX, VCL_STRING s)
+{
+	char *p;
+	utf8proc_ssize_t len;
+	unsigned u;
+	int options = UTF8PROC_STABLE | UTF8PROC_COMPAT | UTF8PROC_COMPOSE | UTF8PROC_IGNORE | UTF8PROC_NLF2LF | UTF8PROC_LUMP | UTF8PROC_STRIPMARK;
+
+
+	CHECK_OBJ_NOTNULL(ctx, VRT_CTX_MAGIC);
+
+	if (!s) {
+		VSLb(ctx->vsl, SLT_Error, "vsf.normalize: No input");
+		return (NULL);
+	}
+
+	/* Input is NULL terminated. */
+	options |= UTF8PROC_NULLTERM;
+
+	u = WS_Reserve(ctx->ws, 0);
+	p = ctx->ws->f;
+
+	len = utf8proc_decompose((utf8proc_uint8_t *)s, 0 /* IGNORED */,
+	    (utf8proc_int32_t *)p, u, options);
+	if (len < 0) {
+		VSLb(ctx->vsl, SLT_Error,
+		    "vsf.normalize: utf8proc_decompose: %s",
+		    utf8proc_errmsg(len));
+		WS_Release(ctx->ws, 0);
+		return (NULL);
+	}
+
+	len = utf8proc_reencode((utf8proc_int32_t *)p, len, options);
+	assert(len > 0);
+	assert(len < u);
+
+	WS_Release(ctx->ws, len + 1);
+	return (p);
 }

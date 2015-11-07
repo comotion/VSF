@@ -32,3 +32,5 @@ $Function VOID conn_reset()
 
 $Function STRING urldecode(STRING)
 
+$Function STRING normalize(STRING s)
+
