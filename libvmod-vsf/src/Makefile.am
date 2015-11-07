@@ -14,8 +14,8 @@ nodist_libvmod_vsf_la_SOURCES = \
 
 libvmod_vsf_la_CFLAGS += -I$(top_srcdir)/../utf8proc -std=c99
 libvmod_vsf_la_SOURCES += \
-	$(top_srcdir)/../utf8proc/utf8proc.c \
-	$(top_srcdir)/../utf8proc/utf8proc.h
+	$(top_srcdir)/utf8proc/utf8proc.c \
+	$(top_srcdir)/utf8proc/utf8proc.h
 
 dist_man_MANS = vmod_vsf.3
 
