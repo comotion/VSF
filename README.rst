@@ -23,20 +23,22 @@ Quick Start
 ===========
 
 To use VSF you will need the vsf and vsthrottle vmods, as well as Varnish 4.x.
+Start by installing Varnish 4.1 as per https://www.varnish-cache.org/content/varnish-cache-410
+
 Install instructions vary by OS and distro, but are roughly::
 
-  # install build dependencies
-  apt-get install varnish libvarnishapi-dev autoconf libtool pkgconfig python-docutils
+
+  # install build dependencies, ubuntu/debian edition
+  apt-get install libvarnishapi-dev autoconf libtool pkgconfig python-docutils
+
+  # install build dependencies, centos/rhel6 edition
+  yum install varnish-libs-devel autoconf libtool pkgconfig python-docutils
 
   # build vmods
-  cd libvmod-vsf && ./autogen.sh && ./configure && make
-  sudo make install
-  cd ../..
-  # (optional, for rules/dos.vcl) install vmod-vsthrottle
-  git clone https://github.com/varnish/libvmod-vsthrottle.git
-  cd libvmod-vsthrottle && ./configure && make
-  sudo make install
-   
+  make
+
+  # install vmods
+  make install
 
 Now symlink the vcl directory into /etc/varnish/security::
 
@@ -99,8 +101,11 @@ References
 This work is based on the work of:
 
 * VFW                           https://github.com/scarpellini/VFW
+
  * by Eduardo S. Scarpellini
+
 * Security.VCL                  https://github.com/comotion/security.vcl
+
  * by Kristian Lyngstøl, Edward B. Fjellskål and Kacper Wysocki
 
 As well as the authors of the following VMODs:
@@ -120,6 +125,7 @@ Unicode codepoints must be normalized to the shortest-byte representation
 to effectively combat WAF evasion. 
 
 * http://www.symantec.com/connect/articles/ids-evasion-unicode
+
  * solution: http://www.public-software-group.org/utf8proc
  * http://www.public-software-group.org/pub/projects/utf8proc/v1.1.5/utf8proc-v1.1.5.tar.gz
 
