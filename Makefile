@@ -18,7 +18,7 @@ vcl:
 	@${MAKE} -C vcl
 
 install: 
-	@${MAKE} -C libvmod-vsthrottle $@
+	@${MAKE} -C libvmod-vsf $@
 	@${MAKE} -C libvmod-vsthrottle $@
 
 .PHONY: build vmod-vsthrottle
