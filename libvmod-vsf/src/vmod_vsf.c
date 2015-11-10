@@ -129,6 +129,8 @@ vmod_body(VRT_CTX, struct vmod_priv *priv, VCL_BYTES maxsize)
 	CHECK_OBJ_NOTNULL(ctx, VRT_CTX_MAGIC);
 	CHECK_OBJ_NOTNULL(ctx->req, REQ_MAGIC);
 
+	if (priv->priv)
+		return (VSB_data(priv->priv));
 	if (!http_GetHdr(ctx->req->http, H_Content_Type, &p))
 		return (NULL);
 	if (strncasecmp(p, FORM_URLENCODED, sizeof(FORM_URLENCODED) - 1)) {
