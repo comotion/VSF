@@ -205,7 +205,7 @@ vmod_normalize(VRT_CTX, VCL_STRING s)
 	char *p;
 	utf8proc_ssize_t len;
 	unsigned u;
-	int options = UTF8PROC_STABLE | UTF8PROC_COMPAT | UTF8PROC_COMPOSE | UTF8PROC_IGNORE | UTF8PROC_NLF2LF | UTF8PROC_LUMP | UTF8PROC_STRIPMARK;
+	int options;
 
 	CHECK_OBJ_NOTNULL(ctx, VRT_CTX_MAGIC);
 	if (!s || !*s) {
@@ -220,6 +220,9 @@ vmod_normalize(VRT_CTX, VCL_STRING s)
 	}
 	p = ctx->ws->f;
 
+	options = UTF8PROC_STABLE | UTF8PROC_COMPAT | UTF8PROC_COMPOSE |
+	    UTF8PROC_IGNORE | UTF8PROC_NLF2LF | UTF8PROC_LUMP |
+	    UTF8PROC_STRIPMARK;
 	/* Input is NULL terminated. */
 	options |= UTF8PROC_NULLTERM;
 
