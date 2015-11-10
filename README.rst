@@ -90,7 +90,7 @@ VSF uses the workspace to store the request, and the default is 64k,
 for request headers and body.
 
 If you are receiving large POST or PUT requests you will probably need to set your
-client_workspace to some large value; typical values range from 1MB to tens of megabytes
+workspace_client to some large value; typical values range from 1MB to tens of megabytes
 depending on the max size of your requests.
 
 If you find any issues let us know! http://github.com/comotion/VSF/issues
