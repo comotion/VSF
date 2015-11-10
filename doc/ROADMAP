@@ -1,13 +1,17 @@
-=====================
- ROADMAP / TODO list
-=====================
+=========
+ ROADMAP 
+=========
 
 There is always more to be done in a security package :-)
 
-- Packaging for Debian/Ubuntu, RHEL/CentOS, FreeBSD and OpenBSD
-- updated / UTF-normalized ruleset
-- NAXI-like rules
+The 
+
+- basic continious integration testing
+- Packaging for Debian/Ubuntu, RHEL/CentOS and FreeBSD/OpenBSD
+- updated rules that assume normalization
+- NAXI-like rule scoring
 - DDoS detection
+- more fancy positive/negative/bypass rule testing
 
 
 Rules

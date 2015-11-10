@@ -7,9 +7,9 @@ import std;
 import vsf;
 
 # clear all internal variables
-include "/etc/varnish/security/build/variables.vcl";
+include "build/variables.vcl";
 
-include "/etc/varnish/security/local.vcl";
+include "local.vcl";
 
 sub vcl_recv {
     set req.http.X-VSF-Actual-IP = regsub(req.http.X-Forwarded-For, "[, ].*$", "");

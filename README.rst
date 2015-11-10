@@ -2,12 +2,11 @@
 Varnish Security Firewall
 =========================
 
+The Varnish Security Firewall is a Web Application Firewall
+written using the Varnish Control Language and a varnish module.
+
 This is work in progress just like any security app should be.
 Use at your own discretion.
-
-The Varnish Security Firewall (VSF) is a Web Application Firewall (WAF)
-written using the Varnish Control Language (VCL) and a sprinkling of
-Varnish Modules (vmods).
 
 VSF aims to provide:
  - A standardized framework for security-related filters
@@ -16,7 +15,7 @@ VSF aims to provide:
    upon when Bad Stuff happens.
 
 This is done mainly by using clever VCL, and with as little impact on
-normal operation as possible. The incident handlers can be CGI-like
+normal cache operation as possible. The incident handlers can be CGI-like
 scripts on a backend.
 
 Quick Start
@@ -95,8 +94,23 @@ Media
 * VSF on Init Tech Days 2014: https://www.youtube.com/watch?v=_zbk9_phkXg&feature=youtu.be
 * VSF at Hack.lu 2012: http://archive.hack.lu/2012/VSF-hacklu2012.pdf
 
-References
-==========
+Future Work
+===========
+
+Write a handler to redirect triggered requests to a honeypot rather than bugging out.
+A handler could also do signature-based recognition of the client/attacker.
+
+See doc/ROADMAP for immiediate plans.
+
+Contributing
+=============
+
+Bugs and feature requests are welcome, and contributors are much obliged. 
+Make us a pull request.
+
+
+Credits
+========
 
 This work is based on the work of:
 
@@ -108,8 +122,14 @@ This work is based on the work of:
 
  * by Kristian Lyngstøl, Edward B. Fjellskål and Kacper Wysocki
 
+* libvmod-vsf
+
+ * by Federico G. Schwindt
+
+
 As well as the authors of the following VMODs:
 
+* Federico G. Schwindt:         https://github.com/fgsch/libvmod-utf8.git
 * Syohei 'xcir' Tanaka:         https://github.com/xcir/libvmod-parsereq.git
 * Dag Haavi Finstad:            https://github.com/varnish/libvmod-vsthrottle
 * N. 'nand2' Deschildre:        https://github.com/nand2/libvmod-throttle.git
@@ -131,4 +151,3 @@ to effectively combat WAF evasion.
 
 Write a handler to redirect triggered requests to a honeypot rather than bugging out.
 A handler could also do signature-based recognition of the client/attacker.
-
