@@ -25,5 +25,7 @@ install:
 	@${MAKE} -C libvmod-vsf $@
 	@${MAKE} -C libvmod-vsthrottle $@
 
+check: build
+	@${MAKE} -C libvmod-vsf $@
 
 .PHONY: build vmod-vsthrottle

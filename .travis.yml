@@ -3,7 +3,6 @@ compiler:
   - clang
   - gcc
 before_install:
-  - git submodule update --init --recursive
   - sudo apt-get update
   - sudo apt-get install apt-transport-https python-docutils
   - curl -s https://repo.varnish-cache.org/ubuntu/GPG-key.txt |
@@ -12,7 +11,5 @@ before_install:
     sudo tee /etc/apt/sources.list.d/varnish-cache.list
   - sudo apt-get update
   - sudo apt-get install varnish libvarnishapi-dev
-  - ./autogen.sh
 script:
-  - ./configure && make CFLAGS="-Wall -Wextra" &&
     make check VERBOSE=1
