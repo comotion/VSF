@@ -181,7 +181,7 @@ vmod_urldecode(VRT_CTX, VCL_STRING s)
 	char *p;
 
 	CHECK_OBJ_NOTNULL(ctx, VRT_CTX_MAGIC);
-	if (!s) {
+	if (!s || !*s) {
 		VSLb(ctx->vsl, SLT_Error, "vsf.urldecode: No input");
 		return (NULL);
 	}
