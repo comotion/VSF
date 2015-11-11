@@ -2,12 +2,14 @@
 vmoddir = $(VMOD_DIR)
 vmod_LTLIBRARIES = libvmod_vsf.la
 
-libvmod_vsf_la_CFLAGS = $(VMOD_INCLUDES)
+libvmod_vsf_la_CFLAGS = $(VMOD_INCLUDES) -I$(top_srcdir)/utf8proc
 libvmod_vsf_la_LDFLAGS = -module -export-dynamic -avoid-version -shared \
 	$(LIBS)
 
 libvmod_vsf_la_SOURCES = \
-	vmod_vsf.c
+	vmod_vsf.c \
+	$(top_srcdir)/utf8proc/utf8proc.c \
+	$(top_srcdir)/utf8proc/utf8proc.h
 nodist_libvmod_vsf_la_SOURCES = \
 	vcc_if.c \
 	vcc_if.h
@@ -28,6 +30,7 @@ vmod_vsf.3: vmod_vsf.man.rst
 	${RST2MAN} $? $@
 
 EXTRA_DIST = vmod.vcc \
+	$(top_srcdir)/utf8proc/utf8proc_data.c \
 	$(TESTS)
 
 CLEANFILES = $(builddir)/vcc_if.c \

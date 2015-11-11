@@ -5,12 +5,11 @@ vcl 4.0;
  */
 import std;
 import vsf;
-import vsthrottle;
 
 # clear all internal variables
-include "/etc/varnish/security/build/variables.vcl";
+include "build/variables.vcl";
 
-include "/etc/varnish/security/local.vcl";
+include "local.vcl";
 
 sub vcl_recv {
     set req.http.X-VSF-Actual-IP = regsub(req.http.X-Forwarded-For, "[, ].*$", "");
@@ -19,11 +18,11 @@ sub vcl_recv {
     set req.http.X-VSF-Proto = req.proto;
     set req.http.X-VSF-URL = req.http.host + req.url;
     set req.http.X-VSF-UA = req.http.user-agent;
+    #STABLE | COMPAT | COMPOSE | IGNORE | NLF2LF | LUMP | STRIPMARK
+    set req.http.X-VSF-URL = vsf.normalize(vsf.urldecode(req.url));
+    set req.http.X-VSF-Body = vsf.normalize(vsf.body(512KB));
     if (req.url ~ "(i)^/[^?]+\.(css|js|jp(e)?g|ico|png|gif|txt|gz(ip)?|zip|rar|iso|lzma|bz(2)?|t(ar\.)?gz|t(ar\.)?bz)(\?.*)?$") {
         set req.http.X-VSF-Static = "y";
-    } else {
-        set req.http.X-VSF-URL = vsf.urldecode(req.url);
-        set req.http.X-VSF-Body = vsf.body(512KB);
     }
 
     # gather info about client
@@ -57,11 +56,7 @@ include "/etc/varnish/security/handlers.vcl";
  *  808 - Raw synthetic deliver
  */
 sub vcl_synth {
-    # are we insecure?
-    std.log("vcl_synth");
-
     if (req.restarts == 0 && req.http.X-VSF-Client ) {
-        # XXX: for some reason one log prints twice... bug?
         call sec_log;
         if (resp.status == 800) {
             set resp.http.X-VSF-Rule = req.http.X-VSF-Rule;
@@ -149,16 +144,6 @@ sub sec_drop {
      vsf.conn_reset();
 }
 
-sub sec_throttle {
-    if (vsthrottle.is_denied(req.http.X-Actual-IP, 3, 1s) ||
-        vsthrottle.is_denied(req.http.X-Actual-IP, 10, 30s) ||
-        vsthrottle.is_denied(req.http.X-Actual-IP, 30, 5m)) {
-        return (synth(429, "Calm down"));
-        # or reset the connection
-				#vsf.conn_reset();
-    }
-}
-
 sub sec_magichandler {
     if (!req.http.X-VSF-Response ) {
         ## The default attack response message, can be overridden by rules.
@@ -207,7 +192,6 @@ sub sec_handler {
             call sec_drop;       # 805  # drop the request (not implemented)
             call sec_myhandler;  # any  # do your own thing
             call sec_default_handler;   # fallback handler
-            call sec_throttle;
             ## note! the passthru handler really does pass thru
             # - you must make sure it is the last thing called
             call sec_passthru;   # n/a  # log client and pass thru to

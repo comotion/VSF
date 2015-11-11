@@ -2,12 +2,11 @@
 Varnish Security Firewall
 =========================
 
+The Varnish Security Firewall is a Web Application Firewall
+written using the Varnish Control Language and a varnish module.
+
 This is work in progress just like any security app should be.
 Use at your own discretion.
-
-The Varnish Security Firewall (VSF) is a Web Application Firewall (WAF)
-written using the Varnish Control Language (VCL) and a sprinkling of
-Varnish Modules (vmods).
 
 VSF aims to provide:
  - A standardized framework for security-related filters
@@ -16,7 +15,7 @@ VSF aims to provide:
    upon when Bad Stuff happens.
 
 This is done mainly by using clever VCL, and with as little impact on
-normal operation as possible. The incident handlers can be CGI-like
+normal cache operation as possible. The incident handlers can be CGI-like
 scripts on a backend.
 
 [![Build Status](https://travis-ci.org/comotion/VSF.svg?branch=master)](https://travis-ci.org/comotion/VSF)
@@ -25,17 +24,22 @@ Quick Start
 ===========
 
 To use VSF you will need the vsf and vsthrottle vmods, as well as Varnish 4.x.
+Start by installing Varnish 4.1 as per https://www.varnish-cache.org/content/varnish-cache-410
+
 Install instructions vary by OS and distro, but are roughly::
 
-  # install build dependencies
-  apt-get install varnish libvarnishapi-dev autoconf libtool pkgconfig python-docutils
+
+  # install build dependencies, ubuntu/debian edition
+  apt-get install libvarnishapi-dev autoconf libtool pkgconfig python-docutils
+
+  # install build dependencies, centos/rhel6 edition
+  yum install varnish-libs-devel autoconf libtool pkgconfig python-docutils
 
   # build vmods
-  cd libvmod-vsf && ./autogen.sh && ./configure && make
-  sudo make install
-  cd ../..
-  git clone https://github.com/varnish/libvmod-vsthrottle.git
-  cd libvmod-vsthrottle && ./configure && make
+  make
+
+  # install vmods
+  make install
 
 Now symlink the vcl directory into /etc/varnish/security::
 
@@ -84,7 +88,31 @@ Also you may write your own handler, see handlers.vcl
 Known Issues
 ============
 
-Let us know! http://github.com/comotion/VSF/issues
+VSF uses the workspace to store the request, and the default is 64k,
+for request headers and body.
+
+If you are receiving large POST or PUT requests you will probably need to set your
+workspace_client to some large value; typical values range from 1MB to tens of megabytes
+depending on the max size of your requests.
+
+If you find any issues let us know! http://github.com/comotion/VSF/issues
+
+Versions
+========
+
+Because we are closely tied to Varnish, VSF versions track Varnish versions. 
+
+We have a four-numbered system like so:
+VSF V.X.Y.Z
+where
+  V is the major Varnish version, so for Varnish 4.x this is 4
+  X is the VSF major version, which changes when there are changes that require recompiling the VSF vmod.
+  Y is the VSF minor version, which changes when new features are added and functionality changes,
+  Z is the point release version, for minor changes and bugfixes.
+
+We also have a 3.0-branch of VSF, which is code compatible with Varnish 3.0. There are several new features in 
+Varnish 4.1 that make the current VSF possible, There will be no further developments on the 3.0 branch.
+
 
 Media
 =====
@@ -92,18 +120,42 @@ Media
 * VSF on Init Tech Days 2014: https://www.youtube.com/watch?v=_zbk9_phkXg&feature=youtu.be
 * VSF at Hack.lu 2012: http://archive.hack.lu/2012/VSF-hacklu2012.pdf
 
-References
-==========
+Future Work
+===========
+
+Write a handler to redirect triggered requests to a honeypot rather than bugging out.
+A handler could also do signature-based recognition of the client/attacker.
+
+See doc/ROADMAP for immiediate plans.
+
+Contributing
+=============
+
+Bugs and feature requests are welcome, and contributors are much obliged. 
+Make us a pull request.
+
+
+Credits
+========
 
 This work is based on the work of:
 
 * VFW                           https://github.com/scarpellini/VFW
+
  * by Eduardo S. Scarpellini
+
 * Security.VCL                  https://github.com/comotion/security.vcl
+
  * by Kristian Lyngstøl, Edward B. Fjellskål and Kacper Wysocki
+
+* libvmod-vsf
+
+ * by Federico G. Schwindt
+
 
 As well as the authors of the following VMODs:
 
+* Federico G. Schwindt:         https://github.com/fgsch/libvmod-utf8.git
 * Syohei 'xcir' Tanaka:         https://github.com/xcir/libvmod-parsereq.git
 * Dag Haavi Finstad:            https://github.com/varnish/libvmod-vsthrottle
 * N. 'nand2' Deschildre:        https://github.com/nand2/libvmod-throttle.git
@@ -119,9 +171,9 @@ Unicode codepoints must be normalized to the shortest-byte representation
 to effectively combat WAF evasion. 
 
 * http://www.symantec.com/connect/articles/ids-evasion-unicode
+
  * solution: http://www.public-software-group.org/utf8proc
  * http://www.public-software-group.org/pub/projects/utf8proc/v1.1.5/utf8proc-v1.1.5.tar.gz
 
 Write a handler to redirect triggered requests to a honeypot rather than bugging out.
 A handler could also do signature-based recognition of the client/attacker.
-

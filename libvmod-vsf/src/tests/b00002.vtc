@@ -2,10 +2,12 @@ varnishtest "Test vsf.body()"
 
 server s1 {
 	rxreq
-	expect req.http.body == "foo+bar%21"
+	expect req.http.body0 == "foo+bar%21"
+	expect req.http.body1 == "foo+bar%21"
 	txresp
 	rxreq
-	expect req.http.body == ""
+	expect req.http.body0 == ""
+	expect req.http.body1 == ""
 	txresp
 } -start
 
@@ -13,7 +15,8 @@ varnish v1 -vcl+backend {
 	import vsf from "${vmod_topbuild}/src/.libs/libvmod_vsf.so";
 
 	sub vcl_recv {
-		set req.http.body = vsf.body(2048B);
+		set req.http.body0 = vsf.body(2048B);
+		set req.http.body1 = vsf.body(2048B);
 	}
 } -start
 

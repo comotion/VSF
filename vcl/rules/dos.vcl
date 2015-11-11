@@ -1,4 +1,15 @@
 # throttle attempted denial of service attacks
+import vsthrottle;
+
+sub sec_throttle {
+    if (vsthrottle.is_denied(req.http.X-Actual-IP, 3, 1s) ||
+        vsthrottle.is_denied(req.http.X-Actual-IP, 10, 30s) ||
+        vsthrottle.is_denied(req.http.X-Actual-IP, 30, 5m)) {
+        return (synth(429, "Calm down"));
+        # or reset the connection
+				#vsf.conn_reset();
+    }
+}
 
 sub vcl_recv {
 

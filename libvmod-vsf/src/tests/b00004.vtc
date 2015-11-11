@@ -1,0 +1,22 @@
+varnishtest "Test vsf.normalize() with ASCII"
+
+server s1 {
+	rxreq
+	txresp
+} -start
+
+varnish v1 -vcl+backend {
+	import vsf from "${vmod_topbuild}/src/.libs/libvmod_vsf.so";
+
+	sub vcl_deliver {
+		set resp.http.normalized = vsf.normalize(req.http.ascii);
+	}
+} -start
+
+client c1 {
+	txreq -hdr \
+	    "ascii: abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+	rxresp
+	expect resp.http.normalized == \
+	    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+} -run
