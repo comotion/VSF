@@ -19,6 +19,8 @@ This is done mainly by using clever VCL, and with as little impact on
 normal operation as possible. The incident handlers can be CGI-like
 scripts on a backend.
 
+[![Build Status](https://travis-ci.org/comotion/VSF.svg?branch=master)](https://travis-ci.org/comotion/VSF)
+
 Quick Start
 ===========
 
