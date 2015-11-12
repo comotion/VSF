@@ -25,7 +25,10 @@ install:
 	@${MAKE} -C libvmod-vsf $@
 	@${MAKE} -C libvmod-vsthrottle $@
 
-check: build
+check: build vcl-check
 	@${MAKE} -C libvmod-vsf $@
 
-.PHONY: build vmod-vsthrottle
+vcl-check:
+	varnishtest tests/*.vtc
+	
+.PHONY: build vmod-vsthrottle check vcl-check vcl
