@@ -35,13 +35,13 @@ sub vcl_recv {
 
 # which modules to use, what to log, how to handle events and honeypot
 # backend definition
-include "/etc/varnish/security/config.vcl";
+include "security/config.vcl";
 
 # fallthrough: clear all internal variables on security.vcl_recv exit
-include "/etc/varnish/security/build/variables.vcl";
+include "security/build/variables.vcl";
 
 # define all the event handlers
-include "/etc/varnish/security/handlers.vcl";
+include "security/handlers.vcl";
 
 /* The value of '800' and up is used because it is not actual HTTP error
  * codes. They should not be exposed.
