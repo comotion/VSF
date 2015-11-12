@@ -206,6 +206,7 @@ vmod_normalize(VRT_CTX, VCL_STRING s)
 {
 	char *p;
 	utf8proc_ssize_t len;
+	utf8proc_ssize_t avail;
 	unsigned u;
 	int options;
 
@@ -228,12 +229,22 @@ vmod_normalize(VRT_CTX, VCL_STRING s)
 	/* Input is NULL terminated. */
 	options |= UTF8PROC_NULLTERM;
 
+	// WS buffer space available in utf8proc_int32_t size, backed off by one
+	// byte to avoid clobbering ctx->ws->e and causing a WS_Assert() error.
+	avail = (u - 1) / sizeof(utf8proc_int32_t);
+
 	len = utf8proc_decompose((utf8proc_uint8_t *)s, 0 /* IGNORED */,
-	    (utf8proc_int32_t *)p, u, options);
+	    (utf8proc_int32_t *)p, avail, options);
 	if (len < 0) {
 		VSLb(ctx->vsl, SLT_Error,
 		    "vsf.normalize: utf8proc_decompose: %s",
 		    utf8proc_errmsg(len));
+		WS_Release(ctx->ws, 0);
+		return (NULL);
+	} else if (len > avail) {
+		VSLb(ctx->vsl, SLT_Error,
+		    "vsf.normalize: insufficient workspace: have %lu need %u",
+		    u, len * sizeof(utf8proc_int32_t));
 		WS_Release(ctx->ws, 0);
 		return (NULL);
 	}
