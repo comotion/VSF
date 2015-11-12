@@ -5,8 +5,8 @@ server s1 {
 	txresp
 } -start
 
-varnish v1 -vcl+backend {
-	include "${pwd}/security/vsf.vcl";
+varnish v1 -arg "-p vcl_dir=$PWD" -vcl+backend {
+	include "security/vsf.vcl";
 
 } -start
 
