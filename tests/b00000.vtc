@@ -1,0 +1,17 @@
+varnishtest "Test vsf vcl"
+
+server s1 {
+	rxreq
+	txresp
+} -start
+
+varnish v1 -vcl+backend {
+	include "security/vsf.vcl";
+
+} -start
+
+client c1 {
+	txreq
+	rxresp
+} -run
+

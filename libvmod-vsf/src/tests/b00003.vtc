@@ -1,0 +1,20 @@
+varnishtest "Test vsf.normalize() with UTF-8"
+
+server s1 {
+	rxreq
+	txresp
+} -start
+
+varnish v1 -vcl+backend {
+	import vsf from "${vmod_topbuild}/src/.libs/libvmod_vsf.so";
+
+	sub vcl_deliver {
+		set resp.http.normalized = vsf.normalize(req.http.utf8);
+	}
+} -start
+
+client c1 {
+	txreq -hdr "utf8: áéíóúçñßÁÉÍÓÚÇÑ‐−"
+	rxresp
+	expect resp.http.normalized == "aeioucnßAEIOUCN--"
+} -run

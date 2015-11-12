@@ -1,0 +1,6 @@
+[submodule "libvmod-vsthrottle"]
+	path = libvmod-vsthrottle
+	url = https://github.com/varnish/libvmod-vsthrottle.git
+[submodule "utf8proc"]
+	path = libvmod-vsf/utf8proc
+	url = https://github.com/JuliaLang/utf8proc.git

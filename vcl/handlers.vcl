@@ -43,7 +43,7 @@ backend sec_honey {
 # Here you can specify what gets logged when a rule triggers.
 sub sec_log {
     std.log("security.vcl alert xid:" + req.xid + " " + req.proto
-        + " [" + req.http.X-VSF-Module + "-" + req.http.X-VSF-RuleId + "]"
+        + " [" + req.http.X-VSF-Module + "-" + req.http.X-VSF-RuleID + "]"
         + req.http.X-VSF-Client
         + " (" +  req.http.X-VSF-RuleName + ") ");
     #std.syslog(6, "<VSF> " + std.time2real(now) + " [" + req.http.X-VSF-RuleName + "/ruleid:" + req.http.X-VSF-RuleID + "]: " + req.http.X-VSF-ClientIP + " - " + req.http.X-VSF-Method + " http://" + req.http.X-VSF-URL + " " + req.http.X-VSF-Proto + " - " + req.http.X-VSF-UA);
