@@ -6,7 +6,7 @@ server s1 {
 } -start
 
 varnish v1 -vcl+backend {
-	include "security/vsf.vcl";
+	include "${pwd}/security/vsf.vcl";
 
 } -start
 

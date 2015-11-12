@@ -38,6 +38,8 @@ check: build vcl-check
 	@${MAKE} -C libvmod-vsf $@
 
 vcl-check:
+	cp vcl/local.vcl.example vcl/local.vcl
 	varnishtest tests/*.vtc
+	rm vcl/local.vcl
 	
 .PHONY: build vmod-vsthrottle check vcl-check vcl
