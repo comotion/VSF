@@ -7,9 +7,9 @@ import std;
 import vsf;
 
 # clear all internal variables
-include "build/variables.vcl";
+include "security/build/variables.vcl";
 
-include "local.vcl";
+include "security/local.vcl";
 
 sub vcl_recv {
     set req.http.X-VSF-Actual-IP = regsub(req.http.X-Forwarded-For, "[, ].*$", "");
