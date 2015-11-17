@@ -31,11 +31,13 @@ install:
 	@${MAKE} -C libvmod-vsthrottle $@
 	install -o root -g ${INSTALLGROUP} -d ${DESTDIR}${VCLDIR}
 	install -o root -g ${INSTALLGROUP} -d ${DESTDIR}${VCLDIR}/rules
+	install -o root -g ${INSTALLGROUP} -d ${DESTDIR}${VCLDIR}/build
 	install -o root -g ${INSTALLGROUP} -m 644 vcl/vsf.vcl ${DESTDIR}${VCLDIR}
 	install -o root -g ${INSTALLGROUP} -m 644 vcl/config.vcl ${DESTDIR}${VCLDIR}
 	install -o root -g ${INSTALLGROUP} -m 644 vcl/handlers.vcl ${DESTDIR}${VCLDIR}
 	install -o root -g ${INSTALLGROUP} -m 644 vcl/local.vcl.example ${DESTDIR}${VCLDIR}/local.vcl
 	for rule in ${RULES}; do install -o root -g ${INSTALLGROUP} -m 644 $$rule ${DESTDIR}${VCLDIR}/rules/$${rule#vcl/rules/}; done
+	install -o root -g ${INSTALLGROUP} -m 644 vcl/build/variables.vcl ${DESTDIR}${VCLDIR}/build/variables.vcl
 
 check: build vcl-check
 	@${MAKE} -C libvmod-vsf $@
