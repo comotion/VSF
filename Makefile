@@ -35,7 +35,7 @@ install:
 	install -o root -g ${INSTALLGROUP} -m 644 vcl/config.vcl ${DESTDIR}${VCLDIR}
 	install -o root -g ${INSTALLGROUP} -m 644 vcl/handlers.vcl ${DESTDIR}${VCLDIR}
 	install -o root -g ${INSTALLGROUP} -m 644 vcl/local.vcl.example ${DESTDIR}${VCLDIR}/local.vcl
-	for rule in ${RULES}; do echo install -o root -g ${INSTALLGROUP} -m 644 $$rule ${DESTDIR}${VCLDIR}/rules/$${rule#vcl/rules/}; done
+	for rule in ${RULES}; do install -o root -g ${INSTALLGROUP} -m 644 $$rule ${DESTDIR}${VCLDIR}/rules/$${rule#vcl/rules/}; done
 
 check: build vcl-check
 	@${MAKE} -C libvmod-vsf $@
