@@ -13,7 +13,7 @@ sub vcl_recv {
     # What about "=cmd(\%20| )" or... ?
 
     # Checks if someone tries to inject a common command name in URL
-    if (req.url ~ "(=|;|&&|%7C%7C)wget.+") {
+    if (req.url ~ "(=|;|&&|%7C%7C)wget(\s|\%20).+") {
         set req.http.X-VSF-RuleName = "Common command in URL: wget";
         set req.http.X-VSF-RuleID = "1";
         set req.http.X-VSF-RuleInfo = "Checks if someone tries to inject a common command name in URL: wget";
@@ -21,7 +21,7 @@ sub vcl_recv {
     }
 
     # Checks if someone tries to inject a common command name in URL
-    if (req.url ~ "(=|;|&&|%7C%7C)curl.+") {
+    if (req.url ~ "(=|;|&&|%7C%7C)curl(\s|\%20).+") {
         set req.http.X-VSF-RuleName = "Common command in URL: curl";
         set req.http.X-VSF-RuleID = "2";
         set req.http.X-VSF-RuleInfo = "Checks if someone tries to inject a common command name in URL: curl";
@@ -29,7 +29,7 @@ sub vcl_recv {
     }
 
     # Checks if someone tries to inject a common command name in URL
-    if (req.url ~ "(=|;|&&|%7C%7C)echo.+") {
+    if (req.url ~ "(=|;|&&|%7C%7C)echo(\s|\%20).+") {
         set req.http.X-VSF-RuleName = "Common command in URL: echo";
         set req.http.X-VSF-RuleID = "3";
         set req.http.X-VSF-RuleInfo = "Checks if someone tries to inject a common command name in URL: echo";
@@ -37,7 +37,7 @@ sub vcl_recv {
     }
 
     # Checks if someone tries to inject a common command name in URL
-    if (req.url ~ "(=|;|&&|%7C%7C)cat.+(?:egory)") {
+    if (req.url ~ "(=|;|&&|%7C%7C)cat(\s|\%20).+") {
         set req.http.X-VSF-RuleName = "Common command in URL: cat";
         set req.http.X-VSF-RuleID = "4";
         set req.http.X-VSF-RuleInfo = "Checks if someone tries to inject a common command name in URL: cat";
@@ -45,7 +45,7 @@ sub vcl_recv {
     }
 
     # Checks if someone tries to inject a common command name in URL
-    if (req.url ~ "(=|;|&&|%7C%7C)cmd.exe.+") {
+    if (req.url ~ "(=|;|&&|%7C%7C)cmd.exe(\s|\%20).+") {
         set req.http.X-VSF-RuleName = "Common command in URL: cmd.exe";
         set req.http.X-VSF-RuleID = "5";
         set req.http.X-VSF-RuleInfo = "Checks if someone tries to inject a common command name in URL: cmd.exe";
@@ -53,7 +53,7 @@ sub vcl_recv {
     }
 
     # Checks if someone tries to inject a common command name in URL
-    if (req.url ~ "(=|;|&&)nc(.exe)?.+(\-(l|p)?)?") {
+    if (req.url ~ "(=|;|&&)nc(.exe)?(\s|\%20).+(\-(l|p)?)?") {
         set req.http.X-VSF-RuleName = "Common command in URL: netcat";
         set req.http.X-VSF-RuleID = "6";
         set req.http.X-VSF-RuleInfo = "Checks if someone tries to inject a common command name in URL: netcat";
