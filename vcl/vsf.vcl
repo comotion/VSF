@@ -11,12 +11,26 @@ import shield;
 include "/etc/varnish/security/build/variables.vcl";
 
 sub vcl_recv {
+    #Remove CloudFlare cookies
+    # Remove has_js and CloudFlare/Google Analytics __* cookies.
+      set req.http.Cookie = regsuball(req.http.Cookie, "(^|;\s*)(_[_a-z]+|has_js)=[^;]*", "");
+      # Remove a ";" prefix, if present.
+    set req.http.Cookie = regsub(req.http.Cookie, "^;\s*", "");
+
+    # Make Wordpress friendly
+    if (req.url ~ "(xmlrpc.php|wp-cron.php|async-upload.php|admin-ajax.php)" || (req.http.cookie ~ "wordpress_logged_in" )) {
+	return (pass);
+    }
+    if (req.url ~ "(/feed/|feedburner|robots.txt)" || (req.http.User-Agent ~ "(?i)(bingbot|googlebot|pingdom)")) {
+        return (lookup);
+    }
+
     set req.http.X-VSF-ClientIP = client.ip;
     set req.http.X-VSF-Method = req.request;
     set req.http.X-VSF-Proto = req.proto;
     set req.http.X-VSF-URL = req.http.host + req.url;
     set req.http.X-VSF-UA = req.http.user-agent;
-    if (req.url ~ "(i)^/[^?]+\.(css|js|jp(e)?g|ico|png|gif|txt|gz(ip)?|zip|rar|iso|lzma|bz(2)?|t(ar\.)?gz|t(ar\.)?bz)(\?.*)?$") {
+    if (req.url ~ "(i)^/[^?]+\.(css|js|jp(e)?g|ico|svg|cur|ttf|woff(2?)|png|gif|txt|gz(ip)?|zip|rar|iso|lzma|bz(2)?|t(ar\.)?gz|t(ar\.)?bz)(\?.*)?$") {
         set req.http.X-VSF-Static = "y";
     } else {
         parsereq.init();
