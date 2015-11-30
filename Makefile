@@ -44,9 +44,9 @@ check: build vcl-check
 
 vcl-check:
 	cp vcl/local.vcl.example vcl/local.vcl
-	sed -i 's/import vsf;/import vsf from "libvmod-vsf/src/libs/";' vcl/vsf.vcl
+	sed -i "s@import vsf;@import vsf from \"$$PWD/libvmod-vsf/src/.libs/libvmod_vsf.so\";@" vcl/vsf.vcl
 	varnishtest tests/*.vtc
 	rm vcl/local.vcl
-	sed -i 's/import vsf from .*$/import vsf;' vcl/vsf.vcl
+	sed -i 's/import vsf from .*$$/import vsf;/' vcl/vsf.vcl
 	
 .PHONY: build vmod-vsthrottle check vcl-check vcl
