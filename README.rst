@@ -98,11 +98,12 @@ Because we are closely tied to Varnish, VSF versions track Varnish versions.
 
 We have a four-numbered system like so:
 VSF V.X.Y.Z
-where
+where::
+
   V is the major Varnish version, so for Varnish 4.x this is 4
-  X is the VSF major version, which changes when there are changes that require recompiling the VSF vmod.
-  Y is the VSF minor version, which changes when new features are added and functionality changes,
-  Z is the point release version, for minor changes and bugfixes.
+  X is the minor Varnish version, so for Varnish 4.1 this is 1
+  Y is the VSF major version, which changes when there are changes that require recompiling the VSF vmod.
+  Z is the VSF minor release version, for minor changes and bugfixes.
 
 We also have a 3.0-branch of VSF, which is code compatible with Varnish 3.0. There are several new features in 
 Varnish 4.1 that make the current VSF possible, There will be no further developments on the 3.0 branch.
