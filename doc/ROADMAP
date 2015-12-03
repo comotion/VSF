@@ -6,7 +6,6 @@ There is always more to be done in a security package :-)
 
 The 
 
-- basic continious integration testing
 - Packaging for Debian/Ubuntu, RHEL/CentOS and FreeBSD/OpenBSD
 - updated rules that assume normalization
 - NAXI-like rule scoring
@@ -31,14 +30,12 @@ porting rules from VFW                    (escarpellini)
 ---  Internal file extensions (SO, Web, VCS, etc);
 ---  Unix/Windows commands;
 ---  Bad UA (scanners); 
-* Load HTTP BODY (POST) - Prove Of Concept;
 * Injection:
 --- SQL Injection;
 --- SSI Injection; 
 * XSS;
 * Automated tests;
 * Simple Web Interface (Dashboard);
-* Module for handle HTTP BODY (POST) - VMOD;
 * HTTP BODY VMOD improvements:
 --- Handle content-types (webservices);
 ---- XML;

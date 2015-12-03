@@ -52,7 +52,6 @@ add it to `security/local.vcl`,
 At this point, you should only need to reload your varnish configuration.
 
 You may want to modify config.vcl to fit your needs. 
-Remember that paths must be hardcoded and absolute.
 
 The Architecture
 ================
