@@ -39,21 +39,15 @@ Install instructions vary by OS and distro, but are roughly::
   # build vmods
   make
 
-  # install vmods
+  # install vmods & vcl
   make install
-
-Now symlink the vcl directory into /etc/varnish/security::
-
-  cd /etc/varnish && ln -s /PATH/TO/VSF/vcl security
 
 then you edit your default.vcl and add this line near the top::
 
   include "/etc/varnish/security/vsf.vcl";
 
-You should also create `local.vcl`, which is where you put any custom VCL
-you want to happen before VSF logic::
-
-  cd /etc/varnish/security && cp local.vcl.example local.vcl
+If you want to add VCL before VSF does its magic but after imports and backends,
+add it to `security/local.vcl`,
 
 At this point, you should only need to reload your varnish configuration.
 
