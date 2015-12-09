@@ -111,6 +111,7 @@ Varnish 4.1 that make the current VSF possible, There will be no further develop
 Media
 =====
 
+* VSF at VUGX Rotterdam: http://www.delta9.pl/public/whyvsf2015/
 * VSF on Init Tech Days 2014: https://www.youtube.com/watch?v=_zbk9_phkXg&feature=youtu.be
 * VSF at Hack.lu 2012: http://archive.hack.lu/2012/VSF-hacklu2012.pdf
 
@@ -120,7 +121,7 @@ Future Work
 Write a handler to redirect triggered requests to a honeypot rather than bugging out.
 A handler could also do signature-based recognition of the client/attacker.
 
-See doc/ROADMAP for immiediate plans.
+See doc/ROADMAP for immediate plans.
 
 Contributing
 =============
@@ -157,4 +158,3 @@ As well as the authors of the following VMODs:
 * Varnish Software ('martin'):  https://github.com/varnish/libvmod-shield.git
 
 and the Varnish Cache by Poul-Henning Kamp, of course ;-)
-
