@@ -25,35 +25,6 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-/*
- * From libvmod-shield:
- *
- * Copyright (c) 2011 Varnish Software AS
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * 1. Redistributions of source code must retain the above copyright
- * notice, this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright
- * notice, this list of conditions and the following disclaimer in the
- * documentation and/or other materials provided with the distribution.
- *
- * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL AUTHOR OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
- * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
- * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
- * SUCH DAMAGE.
- */
 
 #include <ctype.h>
 #include <stdlib.h>
@@ -72,8 +43,6 @@
 #endif
 
 #define FORM_URLENCODED	"application/x-www-form-urlencoded"
-
-int	VTCP_linger(int sock, int linger);	/* From vtcp.h */
 
 
 static int
@@ -155,6 +124,12 @@ vmod_body(VRT_CTX, struct vmod_priv *priv, VCL_BYTES maxsize)
 	return (VSB_data(vsb));
 }
 
+/*
+ * For vmod_conn_reset (from libvmod-shield):
+ *
+ * Copyright (c) 2011 Varnish Software AS
+ * All rights reserved.
+ */
 VCL_VOID __match_proto__(td_vsf_conn_reset)
 vmod_conn_reset(VRT_CTX)
 {
@@ -201,7 +176,7 @@ vmod_urldecode(VRT_CTX, VCL_STRING s)
 }
 
 
-VCL_STRING __match_proto__(td_utf8_transform)
+VCL_STRING __match_proto__(td_vsf_normalize)
 vmod_normalize(VRT_CTX, VCL_STRING s)
 {
 	char *p;
