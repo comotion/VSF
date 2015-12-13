@@ -35,6 +35,7 @@
 #include "vrt.h"
 #include "vcl.h"
 #include "vsa.h"
+#include "vtcp.h"
 
 #include "vcc_if.h"
 
