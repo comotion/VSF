@@ -112,7 +112,10 @@ vmod_body(VRT_CTX, struct vmod_priv *priv, VCL_BYTES maxsize)
 	if (size <= 0)
 		return (NULL);
 	vsb = VSB_new(NULL, NULL, size + 1, 0);
-	AN(vsb);
+	if (!vsb) {
+		VSLb(ctx->vsl, SLT_Error, "vsf.body: Out of memory");
+		return (NULL);
+	}
 	if (VRB_Iterate(ctx->req, vsf_iter_req_body, vsb) == -1) {
 		VSLb(ctx->vsl, SLT_Error,
 		    "vsf.body: Problem fetching the body");
