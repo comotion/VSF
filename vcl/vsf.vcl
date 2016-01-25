@@ -16,7 +16,6 @@ sub vcl_recv {
     set req.http.X-VSF-ClientIP = client.ip;
     set req.http.X-VSF-Method = req.method;
     set req.http.X-VSF-Proto = req.proto;
-    set req.http.X-VSF-URL = req.http.host + req.url;
     set req.http.X-VSF-UA = req.http.user-agent;
     #STABLE | COMPAT | COMPOSE | IGNORE | NLF2LF | LUMP | STRIPMARK
     set req.http.X-VSF-URL = vsf.normalize(vsf.urldecode(req.url));
