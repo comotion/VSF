@@ -5,19 +5,20 @@ server s1 {
 	txresp
 } -start
 
-varnish v1 -vcl+backend {
+varnish v1 -arg "-p workspace_client=9k" -vcl+backend {
 	import vsf from "${vmod_topbuild}/src/.libs/libvmod_vsf.so";
 
 	sub vcl_deliver {
 		set resp.http.invalid = vsf.normalize(req.http.iso88591);
-		set resp.http.no-input = vsf.normalize(req.http.nonexistent);
 	}
 } -start
 
 logexpect l1 -v v1 {
-	expect * 1001 Error \
+	expect * 1001	Error \
 	    "vsf.normalize: utf8proc_decompose: Invalid UTF-8 string"
-	expect * =    Error "vsf.normalize: No input"
+	expect * 1003   Error   "vsf.normalize: Out of workspace"
+	expect * 1004   Error   "vsf.normalize: No input"
+	expect * 1005   Error   "vsf.normalize: No input"
 } -start
 
 client c1 {
@@ -25,7 +26,27 @@ client c1 {
 	txreq -hdr "iso88591: ·ÈÌÛ˙ÁÒﬂ¡…Õ”⁄«—"
 	rxresp
 	expect resp.http.invalid == ""
-	expect resp.http.no-input == ""
+	send "GET / HTTP/1.1\r\n"
+	send "iso88591: "
+	send "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+	send "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+	send "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+	send "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+	send "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+	send "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+	send "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+	send "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+	send "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+	send "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+	send "\r\n\r\n"
+	rxresp
+	expect resp.http.invalid == ""
+	txreq -hdr "iso88591: "
+	rxresp
+	expect resp.http.invalid == ""
+	txreq
+	rxresp
+	expect resp.http.invalid == ""
 } -run
 
 logexpect l1 -wait

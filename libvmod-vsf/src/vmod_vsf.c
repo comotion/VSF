@@ -177,7 +177,6 @@ vmod_urldecode(VRT_CTX, VCL_STRING s)
 	}
 }
 
-
 VCL_STRING __match_proto__(td_vsf_normalize)
 vmod_normalize(VRT_CTX, VCL_STRING s)
 {
@@ -191,10 +190,13 @@ vmod_normalize(VRT_CTX, VCL_STRING s)
 		VSLb(ctx->vsl, SLT_Error, "vsf.normalize: No input");
 		return (NULL);
 	}
+	len = strlen(s);
+	assert(len > 0);
 
 	u = WS_Reserve(ctx->ws, 0);
-	if (!u) {
+	if (u < len * sizeof(utf8proc_int32_t) + 1) {
 		VSLb(ctx->vsl, SLT_Error, "vsf.normalize: Out of workspace");
+		WS_Release(ctx->ws, 0);
 		return (NULL);
 	}
 	p = ctx->ws->f;
@@ -202,11 +204,9 @@ vmod_normalize(VRT_CTX, VCL_STRING s)
 	options = UTF8PROC_STABLE | UTF8PROC_COMPAT | UTF8PROC_COMPOSE |
 	    UTF8PROC_IGNORE | UTF8PROC_NLF2LF | UTF8PROC_LUMP |
 	    UTF8PROC_STRIPMARK;
-	/* Input is NULL terminated. */
-	options |= UTF8PROC_NULLTERM;
 
-	len = utf8proc_decompose((utf8proc_uint8_t *)s, 0 /* IGNORED */,
-	    (utf8proc_int32_t *)p, u, options);
+	len = utf8proc_decompose((utf8proc_uint8_t *)s, len,
+	    (utf8proc_int32_t *)p, len, options);
 	if (len < 0) {
 		VSLb(ctx->vsl, SLT_Error,
 		    "vsf.normalize: utf8proc_decompose: %s",
@@ -214,10 +214,10 @@ vmod_normalize(VRT_CTX, VCL_STRING s)
 		WS_Release(ctx->ws, 0);
 		return (NULL);
 	}
+	assert(len * sizeof(utf8proc_int32_t) + 1 < u);
 
 	len = utf8proc_reencode((utf8proc_int32_t *)p, len, options);
 	assert(len > 0);
-	assert(len < u);
 
 	WS_Release(ctx->ws, len + 1);
 	return (p);
