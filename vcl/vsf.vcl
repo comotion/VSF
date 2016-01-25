@@ -20,7 +20,6 @@ sub vcl_recv {
     set req.http.X-VSF-UA = req.http.user-agent;
     #STABLE | COMPAT | COMPOSE | IGNORE | NLF2LF | LUMP | STRIPMARK
     set req.http.X-VSF-URL = vsf.normalize(vsf.urldecode(req.url));
-    set req.http.X-VSF-Body = vsf.normalize(vsf.body(512KB));
     if (req.url ~ "(i)^/[^?]+\.(css|js|jp(e)?g|ico|png|gif|txt|gz(ip)?|zip|rar|iso|lzma|bz(2)?|t(ar\.)?gz|t(ar\.)?bz)(\?.*)?$") {
         set req.http.X-VSF-Static = "y";
     }
