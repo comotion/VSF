@@ -1,5 +1,8 @@
 varnishtest "Test vsf.body()"
 
+# Skip the test by using a nonexistent feature.
+feature PRIV_TASK
+
 server s1 {
 	rxreq
 	expect req.http.body0 == "foo+bar%21"

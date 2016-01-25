@@ -43,18 +43,6 @@
 #define VRT_CTX         const struct vrt_ctx *ctx
 #endif
 
-#define FORM_URLENCODED	"application/x-www-form-urlencoded"
-
-
-static int
-vsf_iter_req_body(struct req *req, void *priv, void *ptr, size_t len)
-{
-	(void)req;
-
-	VSB_bcat(priv, ptr, len);
-	return (0);
-}
-
 /* Partially based on strlcpy from Todd C. Miller */
 static size_t
 vsf_urldecode(char *dst, const char *src, size_t siz)
@@ -87,45 +75,6 @@ vsf_urldecode(char *dst, const char *src, size_t siz)
 			;
 	}
 	return (s - src - 1);
-}
-
-VCL_STRING __match_proto__(td_vsf_body)
-vmod_body(VRT_CTX, struct vmod_priv *priv, VCL_BYTES maxsize)
-{
-	struct vsb *vsb;
-	const char *p;
-	ssize_t size;
-
-	CHECK_OBJ_NOTNULL(ctx, VRT_CTX_MAGIC);
-	CHECK_OBJ_NOTNULL(ctx->req, REQ_MAGIC);
-
-	if (priv->priv)
-		return (VSB_data(priv->priv));
-	if (!http_GetHdr(ctx->req->http, H_Content_Type, &p))
-		return (NULL);
-	if (strncasecmp(p, FORM_URLENCODED, sizeof(FORM_URLENCODED) - 1)) {
-		VSLb(ctx->vsl, SLT_Error,
-		    "vsf.body: Unsupported form encoding (%s)", p);
-		return (NULL);
-	}
-	size = VRT_CacheReqBody(ctx, maxsize);
-	if (size <= 0)
-		return (NULL);
-	vsb = VSB_new(NULL, NULL, size + 1, 0);
-	if (!vsb) {
-		VSLb(ctx->vsl, SLT_Error, "vsf.body: Out of memory");
-		return (NULL);
-	}
-	if (VRB_Iterate(ctx->req, vsf_iter_req_body, vsb) == -1) {
-		VSLb(ctx->vsl, SLT_Error,
-		    "vsf.body: Problem fetching the body");
-		VSB_delete(vsb);
-		return (NULL);
-	}
-	AZ(VSB_finish(vsb));
-	priv->free = (vmod_priv_free_f *)VSB_delete;
-	priv->priv = vsb;
-	return (VSB_data(vsb));
 }
 
 /*
