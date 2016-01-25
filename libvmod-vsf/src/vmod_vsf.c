@@ -67,10 +67,10 @@ vsf_urldecode(char *dst, const char *src, size_t siz)
 		do {
 			if (*s == '%' && s[1] && s[2]) {
 				if (isxdigit(s[1]) && isxdigit(s[2])) {
-#define ORD(c)	((c) >= 'A' ? ((c) & 0xDF) - 'A' + 10 : (c) - '0')
-					*d++ = ORD(s[1]) << 4 | ORD(s[2]);
+#define DEC(c)	((c) >= 'A' ? ((c) & 0xDF) - 'A' + 10 : (c) - '0')
+					*d++ = DEC(s[1]) << 4 | DEC(s[2]);
 					s += 3;
-#undef ORD
+#undef DEC
 				} else
 					*d++ = *s++;
 			} else if (*s == '+') {
@@ -168,10 +168,8 @@ vmod_urldecode(VRT_CTX, VCL_STRING s)
 	p = ctx->ws->f;
 	v = vsf_urldecode(p, s, u);
 	if (v >= u) {
+		VSLb(ctx->vsl, SLT_Error, "vsf.urldecode: Out of workspace");
 		WS_Release(ctx->ws, 0);
-		VSLb(ctx->vsl, SLT_Error,
-		    "vsf.urldecode: Out of workspace (%u/%u)",
-		    v, u);
 		return (NULL);
 	} else {
 		WS_Release(ctx->ws, v + 1);
