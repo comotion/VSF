@@ -35,13 +35,15 @@
 #include "vrt.h"
 #include "vcl.h"
 #include "vsa.h"
-#include "vtcp.h"
 
 #include "vcc_if.h"
 
 #ifndef VRT_CTX
 #define VRT_CTX         const struct vrt_ctx *ctx
 #endif
+
+int	VTCP_linger(int sock, int linger);	/* From vtcp.h */
+
 
 /* Partially based on strlcpy from Todd C. Miller */
 static size_t
