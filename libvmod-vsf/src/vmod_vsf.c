@@ -46,15 +46,6 @@
 #define FORM_URLENCODED	"application/x-www-form-urlencoded"
 
 
-static int
-vsf_iter_req_body(struct req *req, void *priv, void *ptr, size_t len)
-{
-	(void)req;
-
-	VSB_bcat(priv, ptr, len);
-	return (0);
-}
-
 /* Partially based on strlcpy from Todd C. Miller */
 static size_t
 vsf_urldecode(char *dst, const char *src, size_t siz)
@@ -87,6 +78,15 @@ vsf_urldecode(char *dst, const char *src, size_t siz)
 			;
 	}
 	return (s - src - 1);
+}
+
+static int
+vsf_iter_req_body(struct req *req, void *priv, void *ptr, size_t len)
+{
+	(void)req;
+
+	VSB_bcat(priv, ptr, len);
+	return (0);
 }
 
 VCL_STRING __match_proto__(td_vsf_body)
