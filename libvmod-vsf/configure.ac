@@ -18,12 +18,15 @@ test -z "$PYTHON" && AC_MSG_ERROR([Python 2.6 or greater is required.])
 AC_PATH_PROG([RST2MAN], [rst2man])
 test -z "$RST2MAN" && AC_MSG_ERROR([rst2man is required.])
 
+PKG_CHECK_VAR([VARNISH_BINDIR], [varnishapi], [bindir])
+PKG_CHECK_VAR([VARNISH_SBINDIR], [varnishapi], [sbindir])
+
 VARNISH_VMOD_INCLUDES
 VARNISH_VMOD_DIR
 VARNISH_VMODTOOL
 
-AC_PATH_PROG([VARNISHTEST], [varnishtest])
-AC_PATH_PROG([VARNISHD], [varnishd])
+AC_PATH_PROG([VARNISHTEST], [varnishtest], [], [$VARNISH_BINDIR:$PATH])
+AC_PATH_PROG([VARNISHD], [varnishd], [], [$VARNISH_SBINDIR:$PATH])
 
 VMOD_TESTS="$(cd $srcdir/src && echo tests/*.vtc)"
 AC_SUBST(VMOD_TESTS)
