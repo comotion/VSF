@@ -18,10 +18,12 @@ cat > $TARGET << __EOF__
 
 sub vcl_recv
 {
+  if (req.restarts == 0) {
 __EOF__
 
 grep -Ev '^(#.*|$)' VARIABLES | while read a; do
-	echo "	unset req.http.$a;" >> $TARGET
+	echo "    unset req.http.$a;" >> $TARGET
 done
 
-echo "}" >> $TARGET
+echo "  }
+}" >> $TARGET
