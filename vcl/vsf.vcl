@@ -11,7 +11,26 @@ include "security/build/variables.vcl";
 
 include "security/local.vcl";
 
+/* the honeypot backend...
+ * presently defined to give no service
+ * possible uses:
+ *   send to less critical server
+ *   log evil traffic
+ *   sandbox request
+ *   execute CGI scripts based on traffic
+ *   ... ie to firewall client
+ *   ... other active responses?
+ */
+backend sec_honey {
+    .host = "127.0.1.2";
+    .port = "3";
+}
+
 sub vcl_recv {
+    if (req.restarts > 0 && req.http.X-VSF-Response ~ "honeypot me") {
+        set req.backend_hint = sec_honey;
+        return (pass);
+    }
     set req.http.X-VSF-Actual-IP = regsub(req.http.X-Forwarded-For, "[, ].*$", "");
     set req.http.X-VSF-ClientIP = client.ip;
     set req.http.X-VSF-Method = req.method;

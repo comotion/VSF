@@ -25,21 +25,6 @@ sub sec_default_handler {
     #call sec_myhandler; # any  # do your own thing (as below)
 }
 
-/* the honeypot backend...
- * presently defined to give no service
- * possible uses:
- *   send to less critical server
- *   log evil traffic
- *   sandbox request
- *   execute CGI scripts based on traffic
- *   ... ie to firewall client
- *   ... other active responses?
- */
-backend sec_honey {
-    .host = "127.0.1.2";
-    .port = "3";
-}
-
 # Here you can specify what gets logged when a rule triggers.
 sub sec_log {
     std.log("security.vcl alert xid:" + req.xid + " " + req.proto
