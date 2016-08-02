@@ -2,11 +2,11 @@
 # For now
 sub sec_php_sev1 {
     set req.http.X-VSF-Severity = "1";
+    set req.http.X-VSF-Module = "php";
     call sec_handler;
 }
 
 sub vcl_recv {
-    set req.http.X-VSF-Module = "php";
 
     # Checks if someone tries to alter predefined $GLOBALS variable via url
     if (req.url ~ "GLOBALS\[") {

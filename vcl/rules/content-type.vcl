@@ -2,11 +2,11 @@
 # For now
 sub sec_contenttype_sev1 {
     set req.http.X-VSF-Severity = "1";
+    set req.http.X-VSF-Module = "contenttype";
     call sec_handler;
 }
 
 sub vcl_recv {
-    set req.http.X-VSF-Module = "contenttype";
 
     # Checks for which content-types we accept in GET and HEAD request: application/x-www-form-urlencoded, multipart/form-data request and text/xml
     if ((req.method == "GET" || req.method == "HEAD")

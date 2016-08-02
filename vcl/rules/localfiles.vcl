@@ -2,11 +2,11 @@
 # For now
 sub sec_localfiles_sev1 {
     set req.http.X-VSF-Severity = "1";
+    set req.http.X-VSF-Module = "localfiles";
     call sec_handler;
 }
 
 sub vcl_recv {
-    set req.http.X-VSF-Module = "localfiles";
 
     # Checks if someone tries to access common files from /etc/ dir
     if (req.url ~ "/etc/(passwd(\-)?|(g)?shadow(\-)?|motd|group(\-)?)") {
