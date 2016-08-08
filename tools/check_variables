@@ -10,7 +10,7 @@ fi
 
 RET=0
 
-for a in `grep --exclude=variables.vcl 'X-VSF-' *vcl rules/*vcl | sed 's/.*X-VSF/X-VSF/;s/[){]*//g;s/\s.*//;s/\;\s*$//;s/[^a-zA-Z0-9]*$//' | sort | uniq`; do 
+for a in `grep --exclude=variables.vcl 'X-VSF-' *vcl rules/*vcl | sed 's/.*X-VSF/X-VSF/;s/[){]*//g;s/[[:space:]].*//;s/\;[[:space:]]*$//;s/[^a-zA-Z0-9]*$//' | sort | uniq`; do
 	if ! grep -q $a VARIABLES; then
 		echo >&2 "Variable $a found in a module, but not in VARIABLES! Unsafe."
 		grep $a *vcl rules/*vcl | cat 1>&2
