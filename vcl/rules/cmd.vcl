@@ -2,11 +2,11 @@
 # For now
 sub sec_cmd_sev1 {
     set req.http.X-VSF-Severity = "1";
+    set req.http.X-VSF-Module = "cmd";
     call sec_handler;
 }
 
 sub vcl_recv {
-    set req.http.X-VSF-Module = "cmd";
 
     # Should it be "wget%20", "wget " or "wget\s+"  ?
     # "=cmd\W+" or "=cmd.+" is the best I can think of at the moment

@@ -2,12 +2,12 @@
 # For now
 sub sec_request_sev1 {
     set req.http.X-VSF-Severity = "1";
+    set req.http.X-VSF-Module = "request";
     call sec_handler;
 }
 
 # Checks if someone tries use a blacklisted request method
 sub vcl_recv {
-    set req.http.X-VSF-Module = "request";
 
     if ( req.method == "PUT"
 #     || req.method == "POST"

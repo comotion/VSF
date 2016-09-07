@@ -2,11 +2,11 @@
 # For now
 sub sec_useragent_sev1 {
     set req.http.X-VSF-Severity = "1";
+    set req.http.X-VSF-Module = "useragent";
     call sec_handler;
 }
 
 sub vcl_recv {
-    set req.http.X-VSF-Module = "useragent";
 
     # Checks for php code in User-Agent
     if (req.http.user-agent ~ "php_uname\(") {

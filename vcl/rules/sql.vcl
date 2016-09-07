@@ -2,11 +2,11 @@
 # For now
 sub sec_sql_sev1 {
     set req.http.X-VSF-Severity = "1";
+    set req.http.X-VSF-Module = "sql";
     call sec_handler;
 }
 
 sub vcl_recv {
-    set req.http.X-VSF-Module = "sql";
 
     # Checks if someone tries to use SQL statement in URL: SELECT FROM
     if (req.url ~ "(?i).+SELECT.+FROM") {
