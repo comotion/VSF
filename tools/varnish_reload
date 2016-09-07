@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Reload a varnish config
 # Author: Kristian Lyngstol <kristian@linpro.no>
 

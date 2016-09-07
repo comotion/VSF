@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # 
 # Braindead script to verify that all X-VSF-VCL-variables are part of
 # VARIABLES.
