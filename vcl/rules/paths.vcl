@@ -62,7 +62,7 @@ sub vcl_recv {
 
     # Bad file extensions
     # - http://mod-security.svn.sourceforge.net/ (modsecurity_crs_40_generic_attacks.conf)
-    if (req.url ~ "(?i)\.(inc|ini|scr)") {
+    if (req.url ~ "(?i)\.(inc|ini|scr)$") {
         set req.http.X-VSF-RuleName = "Bad File Extension";
         set req.http.X-VSF-RuleID = "path.generic-1";
         call sec_handler;
