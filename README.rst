@@ -25,7 +25,7 @@ Quick Start
 ===========
 
 To use VSF you will need the vsf and vsthrottle vmods, as well as Varnish 4.x.
-Start by installing Varnish 4.1 as per https://www.varnish-cache.org/content/varnish-cache-410
+Start by installing Varnish 4.1 as per https://www.varnish-cache.org/releases/rel4.1.3.html
 
 Install instructions vary by OS and distro, but are roughly::
 
@@ -136,17 +136,12 @@ Credits
 
 This work is based on the work of:
 
-* VFW                           https://github.com/scarpellini/VFW
-
- * by Eduardo S. Scarpellini
-
-* Security.VCL                  https://github.com/comotion/security.vcl
-
- * by Kristian Lyngstøl, Edward B. Fjellskål and Kacper Wysocki
-
-* libvmod-vsf
-
- * by Federico G. Schwindt
+- VFW                           https://github.com/scarpellini/VFW
+ - by Eduardo S. Scarpellini
+- Security.VCL                  https://github.com/comotion/security.vcl
+ - by Kristian Lyngstøl, Edward B. Fjellskål and Kacper Wysocki
+- libvmod-vsf
+ - by Federico G. Schwindt
 
 
 As well as the authors of the following VMODs:
