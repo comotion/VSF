@@ -80,6 +80,7 @@ vsf_urldecode(char *dst, const char *src, size_t siz)
 	return (s - src - 1);
 }
 
+#if defined(VRT_MAJOR_VERSION) && VRT_MAJOR_VERSION < 5
 static int
 vsf_iter_req_body(struct req *req, void *priv, void *ptr, size_t len)
 {
@@ -88,6 +89,16 @@ vsf_iter_req_body(struct req *req, void *priv, void *ptr, size_t len)
 	VSB_bcat(priv, ptr, len);
 	return (0);
 }
+#else
+static int
+vsf_iter_req_body(void *priv, int flush, const void *ptr, ssize_t len)
+{
+	(void)flush;
+
+	VSB_bcat(priv, ptr, len);
+	return (0);
+}
+#endif
 
 VCL_STRING __match_proto__(td_vsf_body)
 vmod_body(VRT_CTX, struct vmod_priv *priv, VCL_BYTES maxsize)
