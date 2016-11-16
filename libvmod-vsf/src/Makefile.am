@@ -1,4 +1,6 @@
 
+TESTS_ENVIRONMENT = PATH=$(VARNISH_BINDIR):$(VARNISH_SBINDIR):$$PATH
+
 vmoddir = $(VMOD_DIR)
 vmod_LTLIBRARIES = libvmod_vsf.la
 
@@ -16,8 +18,8 @@ nodist_libvmod_vsf_la_SOURCES = \
 
 dist_man_MANS = vmod_vsf.3
 
-VTC_LOG_COMPILER = $(VARNISHTEST) -v -i \
-	-Dvarnishd=$(VARNISHD) -Dvmod_topbuild=$(abs_top_builddir)
+VTC_LOG_COMPILER = $(VARNISHTEST) -v \
+	-Dvmod_topbuild=$(abs_top_builddir)
 TEST_EXTENSIONS = .vtc
 TESTS = @VMOD_TESTS@
 
