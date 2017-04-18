@@ -154,3 +154,8 @@ As well as the authors of the following VMODs:
 * Varnish Software ('martin'):  https://github.com/varnish/libvmod-shield.git
 
 and the Varnish Cache by Poul-Henning Kamp, of course ;-)
+
+
+.. image:: https://badges.gitter.im/comotion/VSF.svg
+   :alt: Join the chat at https://gitter.im/comotion/VSF
+   :target: https://gitter.im/comotion/VSF?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
