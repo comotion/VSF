@@ -26,15 +26,22 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include "config.h"
+
 #include <ctype.h>
 #include <stdlib.h>
 #include <utf8proc.h>
 
-#include "cache/cache.h"
 
-#include "vrt.h"
-#include "vcl.h"
+#include "cache/cache_varnishd.h"
+#include <vcl.h>
+
+#ifndef VRT_H_INCLUDED
+#  include <vrt.h>
+#endif
+
 #include "vsa.h"
+#include "vsb.h"
 #include "vtcp.h"
 
 #include "vcc_if.h"
@@ -80,7 +87,6 @@ vsf_urldecode(char *dst, const char *src, size_t siz)
 	return (s - src - 1);
 }
 
-#if defined(VRT_MAJOR_VERSION) && VRT_MAJOR_VERSION < 5
 static int
 vsf_iter_req_body(struct req *req, void *priv, void *ptr, size_t len)
 {
@@ -89,18 +95,8 @@ vsf_iter_req_body(struct req *req, void *priv, void *ptr, size_t len)
 	VSB_bcat(priv, ptr, len);
 	return (0);
 }
-#else
-static int
-vsf_iter_req_body(void *priv, int flush, const void *ptr, ssize_t len)
-{
-	(void)flush;
 
-	VSB_bcat(priv, ptr, len);
-	return (0);
-}
-#endif
-
-VCL_STRING __match_proto__(td_vsf_body)
+VCL_STRING v_matchproto_(td_vsf_body)
 vmod_body(VRT_CTX, struct vmod_priv *priv, VCL_BYTES maxsize)
 {
 	struct vsb *vsb;
@@ -145,7 +141,7 @@ vmod_body(VRT_CTX, struct vmod_priv *priv, VCL_BYTES maxsize)
  * Copyright (c) 2011 Varnish Software AS
  * All rights reserved.
  */
-VCL_VOID __match_proto__(td_vsf_conn_reset)
+VCL_VOID v_matchproto_(td_vsf_conn_reset)
 vmod_conn_reset(VRT_CTX)
 {
 	CHECK_OBJ_NOTNULL(ctx, VRT_CTX_MAGIC);
@@ -164,7 +160,7 @@ vmod_conn_reset(VRT_CTX)
 	SES_Close(ctx->req->sp, SC_RESP_CLOSE);
 }
 
-VCL_STRING __match_proto__(td_vsf_urldecode)
+VCL_STRING v_matchproto_(td_vsf_urldecode)
 vmod_urldecode(VRT_CTX, VCL_STRING s)
 {
 	unsigned u, v;
@@ -188,7 +184,7 @@ vmod_urldecode(VRT_CTX, VCL_STRING s)
 	}
 }
 
-VCL_STRING __match_proto__(td_vsf_normalize)
+VCL_STRING v_matchproto_(td_vsf_normalize)
 vmod_normalize(VRT_CTX, VCL_STRING s)
 {
 	char *p;
