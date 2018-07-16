@@ -18,14 +18,14 @@ This is done mainly by using clever VCL, and with as little impact on
 normal cache operation as possible. The incident handlers can be CGI-like
 scripts on a backend.
 
-.. image:: https://travis-ci.org/comotion/VSF.svg?branch=master
+.. image:: https://travis-ci.org/comotion/VSF.svg?branch=6.0
     :target: https://travis-ci.org/comotion/VSF
 
 Quick Start
 ===========
 
-To use VSF you will need the vsf and vsthrottle vmods, as well as Varnish 4.x.
-Start by installing Varnish 4.1 as per https://www.varnish-cache.org/releases/rel4.1.3.html
+To use VSF you will need the vsf and vsthrottle vmods, as well as Varnish 6.x.
+Start by installing Varnish 6.0 as per https://varnish-cache.org/releases/rel6.0.0.html
 
 Install instructions vary by OS and distro, but are roughly::
 
