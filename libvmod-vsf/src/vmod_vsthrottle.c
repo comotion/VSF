@@ -130,12 +130,11 @@ calc_tokens(struct tbucket *b, double now)
 	b->tokens += (long) ((delta / b->period) * b->capacity);
 	if (b->tokens > b->capacity)
 		b->tokens = b->capacity;
-	/* VSL(SLT_VCL_Log, 0, "tokens: %ld", b->tokens); */
 }
 
 static
 void do_digest(unsigned char *out, const char *s, VCL_INT l, VCL_DURATION p,
-	       VCL_DURATION b)
+    VCL_DURATION b)
 {
 	SHA256_CTX sctx;
 
@@ -149,7 +148,7 @@ void do_digest(unsigned char *out, const char *s, VCL_INT l, VCL_DURATION p,
 
 VCL_BOOL
 vmod_is_denied(VRT_CTX, VCL_STRING key, VCL_INT limit, VCL_DURATION period,
-               VCL_DURATION block)
+    VCL_DURATION block)
 {
 	unsigned ret = 1, blocked = 0;
 	struct tbucket *b;
@@ -159,10 +158,11 @@ vmod_is_denied(VRT_CTX, VCL_STRING key, VCL_INT limit, VCL_DURATION period,
 	unsigned char digest[SHA256_LEN];
 	unsigned part;
 
-	(void)ctx;
-
-	if (!key)
+	if (!key || !*key) {
+		VSLb(ctx->vsl, SLT_Error,
+		    "vsf.is_denied: Missing key");
 		return (1);
+	}
 	do_digest(digest, key, limit, period, block);
 
 	part = digest[0] & N_PART_MASK;
@@ -180,8 +180,7 @@ vmod_is_denied(VRT_CTX, VCL_STRING key, VCL_INT limit, VCL_DURATION period,
 		if (!blocked)
 			ret = 0;
 		b->last_used = now;
-	}
-	else if (block > 0. && !blocked)
+	} else if (block > 0. && !blocked)
 		b->block = now + block;
 
 	if (block > 0. && !ret && !blocked)
@@ -241,10 +240,10 @@ fini(void *priv)
 int
 event_function(VRT_CTX, struct vmod_priv *priv, enum vcl_event_e e)
 {
+	(void)ctx;
+
 	if (e != VCL_EVENT_LOAD)
 		return (0);
-
-	(void)ctx;
 
 	priv->priv = &n_init;
 	priv->free = fini;
