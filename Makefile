@@ -4,7 +4,7 @@ INSTALLGROUP = root
 
 RULES = $(shell ls vcl/rules/*.vcl)
 
-build: libvmod-vsf/src/.libs/libvmod-vsf.so  libvmod-vsthrottle/src/.libs/libvmod-vsthrottle.so vcl
+build: libvmod-vsf/src/.libs/libvmod-vsf.so vcl
 
 libvmod-vsf/src/.libs/libvmod-vsf.so: libvmod-vsf/utf8proc/utf8proc.c
 	@cd libvmod-vsf && ./autogen.sh
@@ -15,20 +15,11 @@ libvmod-vsf/utf8proc/utf8proc.c:
 	@git submodule init
 	@git submodule update
 
-libvmod-vsthrottle/src/vmod_vsthrottle.c:
-	@git submodule init
-	@git submodule update
-
-libvmod-vsthrottle/src/.libs/libvmod-vsthrottle.so: libvmod-vsthrottle/src/vmod_vsthrottle.c
-	@cd libvmod-vsthrottle && ./autogen.sh && ./configure
-	@${MAKE} -C libvmod-vsthrottle
-
 vcl:
 	@${MAKE} -C vcl
 
 install: 
 	@${MAKE} -C libvmod-vsf $@
-	@${MAKE} -C libvmod-vsthrottle $@
 	install -o root -g ${INSTALLGROUP} -d ${DESTDIR}${VCLDIR}
 	install -o root -g ${INSTALLGROUP} -d ${DESTDIR}${VCLDIR}/rules
 	install -o root -g ${INSTALLGROUP} -d ${DESTDIR}${VCLDIR}/build
@@ -49,4 +40,4 @@ vcl-check:
 	rm vcl/local.vcl
 	sed -i 's/import vsf from .*$$/import vsf;/' vcl/vsf.vcl
 	
-.PHONY: build vmod-vsthrottle check vcl-check vcl
+.PHONY: build check vcl-check vcl
