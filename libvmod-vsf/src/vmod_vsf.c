@@ -28,22 +28,19 @@
 
 #include <ctype.h>
 #include <stdlib.h>
+#include <string.h>
 #include <utf8proc.h>
 
-#include "cache/cache.h"
+#include "cache/cache_varnishd.h"
 
-#include "vrt.h"
 #include "vcl.h"
-#include "vsa.h"
 #include "vtcp.h"
 
 #include "vcc_if.h"
 
-#ifndef VRT_CTX
-#define VRT_CTX         const struct vrt_ctx *ctx
-#endif
-
 #define FORM_URLENCODED	"application/x-www-form-urlencoded"
+
+void SES_Close(struct sess *, enum sess_close reason);
 
 
 /* Partially based on strlcpy from Todd C. Miller */
@@ -80,16 +77,6 @@ vsf_urldecode(char *dst, const char *src, size_t siz)
 	return (s - src - 1);
 }
 
-#if defined(VRT_MAJOR_VERSION) && VRT_MAJOR_VERSION < 5
-static int
-vsf_iter_req_body(struct req *req, void *priv, void *ptr, size_t len)
-{
-	(void)req;
-
-	VSB_bcat(priv, ptr, len);
-	return (0);
-}
-#else
 static int
 vsf_iter_req_body(void *priv, int flush, const void *ptr, ssize_t len)
 {
@@ -98,9 +85,8 @@ vsf_iter_req_body(void *priv, int flush, const void *ptr, ssize_t len)
 	VSB_bcat(priv, ptr, len);
 	return (0);
 }
-#endif
 
-VCL_STRING __match_proto__(td_vsf_body)
+VCL_STRING
 vmod_body(VRT_CTX, struct vmod_priv *priv, VCL_BYTES maxsize)
 {
 	struct vsb *vsb;
@@ -124,7 +110,8 @@ vmod_body(VRT_CTX, struct vmod_priv *priv, VCL_BYTES maxsize)
 		return (NULL);
 	vsb = VSB_new(NULL, NULL, size + 1, 0);
 	if (!vsb) {
-		VSLb(ctx->vsl, SLT_Error, "vsf.body: Out of memory");
+		VSLb(ctx->vsl, SLT_Error,
+		    "vsf.body: Out of memory");
 		return (NULL);
 	}
 	if (VRB_Iterate(ctx->req, vsf_iter_req_body, vsb) == -1) {
@@ -145,7 +132,7 @@ vmod_body(VRT_CTX, struct vmod_priv *priv, VCL_BYTES maxsize)
  * Copyright (c) 2011 Varnish Software AS
  * All rights reserved.
  */
-VCL_VOID __match_proto__(td_vsf_conn_reset)
+VCL_VOID
 vmod_conn_reset(VRT_CTX)
 {
 	CHECK_OBJ_NOTNULL(ctx, VRT_CTX_MAGIC);
@@ -164,7 +151,7 @@ vmod_conn_reset(VRT_CTX)
 	SES_Close(ctx->req->sp, SC_RESP_CLOSE);
 }
 
-VCL_STRING __match_proto__(td_vsf_urldecode)
+VCL_STRING
 vmod_urldecode(VRT_CTX, VCL_STRING s)
 {
 	unsigned u, v;
@@ -172,14 +159,16 @@ vmod_urldecode(VRT_CTX, VCL_STRING s)
 
 	CHECK_OBJ_NOTNULL(ctx, VRT_CTX_MAGIC);
 	if (!s || !*s) {
-		VSLb(ctx->vsl, SLT_Error, "vsf.urldecode: No input");
+		VSLb(ctx->vsl, SLT_Error,
+		    "vsf.urldecode: No input");
 		return (NULL);
 	}
 	u = WS_Reserve(ctx->ws, 0);
 	p = ctx->ws->f;
 	v = vsf_urldecode(p, s, u);
 	if (v >= u) {
-		VSLb(ctx->vsl, SLT_Error, "vsf.urldecode: Out of workspace");
+		VSLb(ctx->vsl, SLT_Error,
+		    "vsf.urldecode: Out of workspace");
 		WS_Release(ctx->ws, 0);
 		return (NULL);
 	} else {
@@ -188,7 +177,7 @@ vmod_urldecode(VRT_CTX, VCL_STRING s)
 	}
 }
 
-VCL_STRING __match_proto__(td_vsf_normalize)
+VCL_STRING
 vmod_normalize(VRT_CTX, VCL_STRING s)
 {
 	char *p;
@@ -198,7 +187,8 @@ vmod_normalize(VRT_CTX, VCL_STRING s)
 
 	CHECK_OBJ_NOTNULL(ctx, VRT_CTX_MAGIC);
 	if (!s || !*s) {
-		VSLb(ctx->vsl, SLT_Error, "vsf.normalize: No input");
+		VSLb(ctx->vsl, SLT_Error,
+		    "vsf.normalize: No input");
 		return (NULL);
 	}
 	len = strlen(s);
@@ -206,7 +196,8 @@ vmod_normalize(VRT_CTX, VCL_STRING s)
 
 	u = WS_Reserve(ctx->ws, 0);
 	if (u < len * sizeof(utf8proc_int32_t) + 1) {
-		VSLb(ctx->vsl, SLT_Error, "vsf.normalize: Out of workspace");
+		VSLb(ctx->vsl, SLT_Error,
+		    "vsf.normalize: Out of workspace");
 		WS_Release(ctx->ws, 0);
 		return (NULL);
 	}
