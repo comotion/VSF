@@ -22,7 +22,7 @@ varnish v1 -vcl+backend {
 
 logexpect l1 -v v1 {
 	expect * 1003 Error \
-	    "vsf.body: Unsupported form encoding \(multipart/form-data"
+	    {vsf.body: Unsupported form encoding \(multipart/form-data}
 } -start
 
 client c1 {
