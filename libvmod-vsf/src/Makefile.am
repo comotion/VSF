@@ -10,6 +10,7 @@ libvmod_vsf_la_LDFLAGS = -module -export-dynamic -avoid-version -shared \
 
 libvmod_vsf_la_SOURCES = \
 	vmod_vsf.c \
+	vmod_vsthrottle.c \
 	$(top_srcdir)/utf8proc/utf8proc.c \
 	$(top_srcdir)/utf8proc/utf8proc.h
 nodist_libvmod_vsf_la_SOURCES = \

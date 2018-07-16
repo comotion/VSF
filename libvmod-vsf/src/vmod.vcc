@@ -35,3 +35,4 @@ $Function STRING urldecode(STRING)
 
 $Function STRING normalize(STRING)
 
+$Function BOOL is_denied(STRING, INT, DURATION, DURATION)
