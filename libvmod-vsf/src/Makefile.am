@@ -26,13 +26,13 @@ TESTS = @VMOD_TESTS@
 
 $(libvmod_vsf_la_OBJECTS): vcc_if.h
 
-vcc_if.c vcc_if.h vmod_vsf.man.rst: $(VMODTOOL) $(top_srcdir)/src/vmod.vcc
-	$(PYTHON) $(VMODTOOL) $(top_srcdir)/src/vmod.vcc
+vcc_if.c vcc_if.h vmod_vsf.man.rst: $(VMODTOOL) $(top_srcdir)/src/vmod_vsf.vcc
+	$(PYTHON) $(VMODTOOL) $(top_srcdir)/src/vmod_vsf.vcc
 
 vmod_vsf.3: vmod_vsf.man.rst
 	${RST2MAN} $? $@
 
-EXTRA_DIST = vmod.vcc \
+EXTRA_DIST = vmod_vsf.vcc \
 	$(top_srcdir)/utf8proc/utf8proc_data.c \
 	$(TESTS)
 

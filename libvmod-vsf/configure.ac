@@ -1,7 +1,7 @@
-AC_INIT([libvmod-vsf], [0.1.0])
+AC_INIT([libvmod-vsf], [0.2.0])
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_AUX_DIR([build-aux])
-AC_CONFIG_SRCDIR(src/vmod.vcc)
+AC_CONFIG_SRCDIR(src/vmod_vsf.vcc)
 AM_CONFIG_HEADER(config.h)
 m4_ifndef([VARNISH_VMOD_INCLUDES], AC_MSG_ERROR([varnish.m4 is required.]))
 
