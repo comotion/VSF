@@ -27,12 +27,36 @@
 
 $Module vsf 3 Varnish Security Firewall
 
+DESCRIPTION
+===========
+
 $Function STRING body(PRIV_TASK, BYTES maxsize)
 
 $Function VOID conn_reset()
 
-$Function STRING urldecode(STRING s)
+$Function BOOL is_denied(STRING key, INT limit, DURATION period, DURATION block=0)
 
 $Function STRING normalize(STRING s)
 
-$Function BOOL is_denied(STRING key, INT limit, DURATION period, DURATION block=0)
+$Function STRING urldecode(STRING s)
+
+ERRORS
+======
+
+* "vsf.body: Unsupported form encoding (%s)"
+* "vsf.body: Out of memory"
+* "vsf.body: Problem fetching the body"
+* "vsf.conn_reset: Can only be called from vcl_recv{}"
+* "vsf.conn_reset: Invalid file descriptor"
+* "vsf.is_denied: Missing key"
+* "vsf.normalize: No input"
+* "vsf.normalize: Out of workspace"
+* "vsf.normalize: utf8proc_decompose: %s"
+* "vsf.urldecode: No input"
+* "vsf.urldecode: Out of workspace"
+
+SEE ALSO
+========
+
+* `varnishlog(1)`
+* `vsl(7)`
