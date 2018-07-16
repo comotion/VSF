@@ -27,12 +27,12 @@
 
 $Module vsf 3 Varnish Security Firewall
 
-$Function STRING body(PRIV_TASK, BYTES)
+$Function STRING body(PRIV_TASK, BYTES maxsize)
 
 $Function VOID conn_reset()
 
-$Function STRING urldecode(STRING)
+$Function STRING urldecode(STRING s)
 
-$Function STRING normalize(STRING)
+$Function STRING normalize(STRING s)
 
-$Function BOOL is_denied(STRING, INT, DURATION, DURATION)
+$Function BOOL is_denied(STRING key, INT limit, DURATION period, DURATION block=0)
