@@ -15,7 +15,7 @@ AC_PROG_LIBTOOL
 AC_PATH_PROGS([PYTHON], [python3 python2.7 python2.6])
 test -z "$PYTHON" && AC_MSG_ERROR([Python 2.6 or greater is required.])
 
-AC_PATH_PROG([RST2MAN], [rst2man])
+AC_PATH_PROGS([RST2MAN], [rst2man rst2man.py])
 test -z "$RST2MAN" && AC_MSG_ERROR([rst2man is required.])
 
 PKG_CHECK_VAR([VARNISH_PREFIX], [varnishapi], [prefix])
