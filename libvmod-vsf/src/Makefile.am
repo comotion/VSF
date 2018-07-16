@@ -5,14 +5,14 @@ vmoddir = $(VMOD_DIR)
 vmod_LTLIBRARIES = libvmod_vsf.la
 
 libvmod_vsf_la_CFLAGS = $(VMOD_INCLUDES) -I$(top_srcdir)/utf8proc
-libvmod_vsf_la_LDFLAGS = -module -export-dynamic -avoid-version -shared \
-	$(LIBS)
+libvmod_vsf_la_LDFLAGS = -module -export-dynamic -avoid-version -shared
 
 libvmod_vsf_la_SOURCES = \
 	vmod_vsf.c \
 	vmod_vsthrottle.c \
 	$(top_srcdir)/utf8proc/utf8proc.c \
 	$(top_srcdir)/utf8proc/utf8proc.h
+
 nodist_libvmod_vsf_la_SOURCES = \
 	vcc_if.c \
 	vcc_if.h
@@ -26,7 +26,9 @@ TESTS = @VMOD_TESTS@
 
 $(libvmod_vsf_la_OBJECTS): vcc_if.h
 
-vcc_if.c vcc_if.h vmod_vsf.man.rst: $(VMODTOOL) $(top_srcdir)/src/vmod_vsf.vcc
+vcc_if.h vmod_utf8.man.rst vmod_utf8.rst: vcc_if.c
+
+vcc_if.c: $(VMODTOOL) $(top_srcdir)/src/vmod_vsf.vcc
 	$(PYTHON) $(VMODTOOL) $(top_srcdir)/src/vmod_vsf.vcc
 
 vmod_vsf.3: vmod_vsf.man.rst

@@ -12,8 +12,9 @@ AC_DISABLE_STATIC
 AC_PROG_CC_C99
 AC_PROG_LIBTOOL
 
-AC_PATH_PROGS([PYTHON], [python3 python2.7 python2.6])
-test -z "$PYTHON" && AC_MSG_ERROR([Python 2.6 or greater is required.])
+AM_PATH_PYTHON([2.7], [], [
+  AC_MSG_ERROR([Python 2.7 or later is required.])
+])
 
 AC_PATH_PROGS([RST2MAN], [rst2man rst2man.py])
 test -z "$RST2MAN" && AC_MSG_ERROR([rst2man is required.])
