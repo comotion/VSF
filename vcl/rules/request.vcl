@@ -33,6 +33,10 @@ sub vcl_recv {
         set req.http.X-VSF-RuleName = "HTTP/1.1 no host header";
         set req.http.X-VSF-RuleID = "3";
     }
+    if (req.url ~ "/\.{1,2}/") {
+        set req.http.X-VSF-RuleName = "Invalid URI in request";
+        set req.http.X-VSF-RuleID = "4";
+    }
     #if (req.proto ~ "^HTTP/1.0$" && req.http.) {A
     # awaiting vmod to iterate over headers...
 }
