@@ -31,7 +31,7 @@ sub sec_log {
         + " [" + req.http.X-VSF-Module + "-" + req.http.X-VSF-RuleID + "]"
         + req.http.X-VSF-Client
         + " (" +  req.http.X-VSF-RuleName + ") ");
-    #std.syslog(6, "<VSF> " + std.time2real(now) + " [" + req.http.X-VSF-RuleName + "/ruleid:" + req.http.X-VSF-RuleID + "]: " + req.http.X-VSF-ClientIP + " - " + req.http.X-VSF-Method + " http://" + req.http.X-VSF-URL + " " + req.http.X-VSF-Proto + " - " + req.http.X-VSF-UA);
+    #std.syslog(6, "<VSF> " + std.time2real(now, 1.0) + " [" + req.http.X-VSF-RuleName + "/ruleid:" + req.http.X-VSF-RuleID + "]: " + req.http.X-VSF-ClientIP + " - " + req.http.X-VSF-Method + " http://" + req.http.X-VSF-URL + " " + req.http.X-VSF-Proto + " - " + req.http.X-VSF-UA);
 }
 
 
