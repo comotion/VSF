@@ -163,7 +163,7 @@ vmod_urldecode(VRT_CTX, VCL_STRING s)
 		    "vsf.urldecode: No input");
 		return (NULL);
 	}
-	u = WS_Reserve(ctx->ws, 0);
+	u = WS_ReserveAll(ctx->ws);
 	p = ctx->ws->f;
 	v = vsf_urldecode(p, s, u);
 	if (v >= u) {
@@ -194,7 +194,7 @@ vmod_normalize(VRT_CTX, VCL_STRING s)
 	len = strlen(s);
 	assert(len > 0);
 
-	u = WS_Reserve(ctx->ws, 0);
+	u = WS_ReserveAll(ctx->ws);
 	if (u < len * sizeof(utf8proc_int32_t) + 1) {
 		VSLb(ctx->vsl, SLT_Error,
 		    "vsf.normalize: Out of workspace");
