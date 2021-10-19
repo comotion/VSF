@@ -27,6 +27,7 @@ client c1 {
 	rxresp
 	expect resp.http.invalid == ""
 	send "GET / HTTP/1.1\r\n"
+	send "Host: 127.0.0.1\r\n"
 	send "iso88591: "
 	send "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
 	send "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
