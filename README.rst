@@ -24,7 +24,7 @@ be CGI-like scripts on a backend.
 Quick Start
 ===========
 
-To use VSF you will need the vsf vmod, as well as Varnish 6.x.
+To use VSF you will need the vsf vmod, as well as Varnish 6.0.x.
 Start by installing Varnish 6.0.8 as per
 https://varnish-cache.org/releases/rel6.0.8.html
 
