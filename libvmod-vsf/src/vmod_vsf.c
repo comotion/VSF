@@ -86,6 +86,19 @@ vsf_iter_req_body(void *priv, unsigned flush, const void *ptr, ssize_t len)
 	return (0);
 }
 
+static void
+vsf_body_priv_free(VRT_CTX, void *p)
+{
+	CHECK_OBJ_NOTNULL(ctx, VRT_CTX_MAGIC);
+	VSB_delete(p);
+}
+
+static const struct vmod_priv_methods vmod_body_methods[1] = {{
+	.magic = VMOD_PRIV_METHODS_MAGIC,
+	.type = "vmod_body_methods",
+	.fini = vsf_body_priv_free
+}};
+
 VCL_STRING
 vmod_body(VRT_CTX, struct vmod_priv *priv, VCL_BYTES maxsize)
 {
@@ -122,8 +135,8 @@ vmod_body(VRT_CTX, struct vmod_priv *priv, VCL_BYTES maxsize)
 		return (NULL);
 	}
 	AZ(VSB_finish(vsb));
-	priv->free = (vmod_priv_free_f *)VSB_delete;
 	priv->priv = vsb;
+	priv->methods = vmod_body_methods;
 	return (VSB_data(vsb));
 }
 
