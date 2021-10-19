@@ -18,15 +18,15 @@ This is done mainly by using clever VCL, and with as little impact
 on normal cache operation as possible. The incident handlers can
 be CGI-like scripts on a backend.
 
-.. image:: https://travis-ci.org/comotion/VSF.svg?branch=6.0
-    :target: https://travis-ci.org/comotion/VSF
+.. image:: https://github.com/comotion/VSF/actions/workflows/ci.yml/badge.svg?branch=6.0
+    :target: https://github.com/comotion/VSF/actions
 
 Quick Start
 ===========
 
 To use VSF you will need the vsf vmod, as well as Varnish 6.x.
-Start by installing Varnish 6.0 as per
-https://varnish-cache.org/releases/rel6.0.0.html
+Start by installing Varnish 6.0.8 as per
+https://varnish-cache.org/releases/rel6.0.8.html
 
 Install instructions vary by OS and distro, but are roughly::
 
