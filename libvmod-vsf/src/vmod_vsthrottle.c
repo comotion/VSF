@@ -50,7 +50,7 @@ struct tbucket {
 	double			block;
 	long			tokens;
 	long			capacity;
-	VRB_ENTRY(tbucket)	tree;
+	VRBT_ENTRY(tbucket)	tree;
 };
 
 static int
@@ -59,9 +59,9 @@ keycmp(const struct tbucket *b1, const struct tbucket *b2)
 	return (memcmp(b1->digest, b2->digest, sizeof b1->digest));
 }
 
-VRB_HEAD(tbtree, tbucket);
-VRB_PROTOTYPE_STATIC(tbtree, tbucket, tree, keycmp);
-VRB_GENERATE_STATIC(tbtree, tbucket, tree, keycmp);
+VRBT_HEAD(tbtree, tbucket);
+VRBT_PROTOTYPE_STATIC(tbtree, tbucket, tree, keycmp);
+VRBT_GENERATE_STATIC(tbtree, tbucket, tree, keycmp);
 
 /* To lessen potential mutex contention, we partition the buckets into
    N_PART partitions.  */
@@ -111,12 +111,12 @@ get_bucket(const unsigned char *digest, long limit, double period, double now)
 
 	INIT_OBJ(&k, TBUCKET_MAGIC);
 	memcpy(&k.digest, digest, sizeof k.digest);
-	b = VRB_FIND(tbtree, &v->buckets, &k);
+	b = VRBT_FIND(tbtree, &v->buckets, &k);
 	if (b) {
 		CHECK_OBJ_NOTNULL(b, TBUCKET_MAGIC);
 	} else {
 		b = tb_alloc(digest, limit, period, now);
-		AZ(VRB_INSERT(tbtree, &v->buckets, b));
+		AZ(VRBT_INSERT(tbtree, &v->buckets, b));
 	}
 	return (b);
 }
@@ -204,10 +204,10 @@ run_gc(double now, unsigned part)
 	struct tbtree *buckets = &vsthrottle[part].buckets;
 
 	/* XXX: Assert mtx is held ... */
-	VRB_FOREACH_SAFE(x, tbtree, buckets, y) {
+	VRBT_FOREACH_SAFE(x, tbtree, buckets, y) {
 		CHECK_OBJ_NOTNULL(x, TBUCKET_MAGIC);
 		if (now - x->last_used > x->period) {
-			VRB_REMOVE(tbtree, buckets, x);
+			VRBT_REMOVE(tbtree, buckets, x);
 			free(x);
 		}
 	}
@@ -227,9 +227,9 @@ fini(void *priv)
 
 		for (p = 0; p < N_PART; ++p ) {
 			struct vsthrottle *v = &vsthrottle[p];
-			VRB_FOREACH_SAFE(x, tbtree, &v->buckets, y) {
+			VRBT_FOREACH_SAFE(x, tbtree, &v->buckets, y) {
 				CHECK_OBJ_NOTNULL(x, TBUCKET_MAGIC);
-				VRB_REMOVE(tbtree, &v->buckets, x);
+				VRBT_REMOVE(tbtree, &v->buckets, x);
 				free(x);
 			}
 		}
@@ -254,7 +254,7 @@ event_function(VRT_CTX, struct vmod_priv *priv, enum vcl_event_e e)
 			struct vsthrottle *v = &vsthrottle[p];
 			v->magic = VSTHROTTLE_MAGIC;
 			AZ(pthread_mutex_init(&v->mtx, NULL));
-			VRB_INIT(&v->buckets);
+			VRBT_INIT(&v->buckets);
 		}
 	}
 	n_init++;
