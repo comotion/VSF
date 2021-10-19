@@ -78,7 +78,7 @@ vsf_urldecode(char *dst, const char *src, size_t siz)
 }
 
 static int
-vsf_iter_req_body(void *priv, int flush, const void *ptr, ssize_t len)
+vsf_iter_req_body(void *priv, unsigned flush, const void *ptr, ssize_t len)
 {
 	(void)flush;
 
@@ -114,7 +114,8 @@ vmod_body(VRT_CTX, struct vmod_priv *priv, VCL_BYTES maxsize)
 		    "vsf.body: Out of memory");
 		return (NULL);
 	}
-	if (VRB_Iterate(ctx->req, vsf_iter_req_body, vsb) == -1) {
+	if (VRB_Iterate(ctx->req->wrk, ctx->vsl, ctx->req,
+	    vsf_iter_req_body, vsb) == -1) {
 		VSLb(ctx->vsl, SLT_Error,
 		    "vsf.body: Problem fetching the body");
 		VSB_delete(vsb);
