@@ -30,6 +30,8 @@ $Module vsf 3 "Varnish Security Firewall"
 DESCRIPTION
 ===========
 
+$Event event_function
+
 $Function STRING body(PRIV_TASK, BYTES maxsize)
 
 $Function VOID conn_reset()
