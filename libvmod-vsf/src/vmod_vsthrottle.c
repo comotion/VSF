@@ -32,13 +32,10 @@
 #include <string.h>
 #include <pthread.h>
 
-#include "vdef.h"
-#include "vrt.h"
-#include "vas.h"
-#include "miniobj.h"
+#include "cache/cache.h"
+
 #include "vsha256.h"
 #include "vtim.h"
-#include "vtree.h"
 
 #include "vcc_if.h"
 
