@@ -26,15 +26,18 @@
  * SUCH DAMAGE.
  */
 
+#include "config.h"
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
+#include <string.h>
 #include <pthread.h>
 
-#include "cache/cache.h"
-
-#include "vtim.h"
+#include "vdef.h"
+#include "vrt.h"
+#include "vas.h"
+#include "miniobj.h"
 #include "vsha256.h"
+#include "vtim.h"
 #include "vtree.h"
 
 #include "vcc_if.h"
@@ -130,11 +133,12 @@ calc_tokens(struct tbucket *b, double now)
 	b->tokens += (long) ((delta / b->period) * b->capacity);
 	if (b->tokens > b->capacity)
 		b->tokens = b->capacity;
+	/* VSL(SLT_VCL_Log, 0, "tokens: %ld", b->tokens); */
 }
 
 static
 void do_digest(unsigned char *out, const char *s, VCL_INT l, VCL_DURATION p,
-    VCL_DURATION b)
+	       VCL_DURATION b)
 {
 	SHA256_CTX sctx;
 
@@ -148,7 +152,7 @@ void do_digest(unsigned char *out, const char *s, VCL_INT l, VCL_DURATION p,
 
 VCL_BOOL
 vmod_is_denied(VRT_CTX, VCL_STRING key, VCL_INT limit, VCL_DURATION period,
-    VCL_DURATION block)
+               VCL_DURATION block)
 {
 	unsigned ret = 1, blocked = 0;
 	struct tbucket *b;
@@ -158,7 +162,9 @@ vmod_is_denied(VRT_CTX, VCL_STRING key, VCL_INT limit, VCL_DURATION period,
 	unsigned char digest[SHA256_LEN];
 	unsigned part;
 
-	if (!key || !*key) {
+	CHECK_OBJ_NOTNULL(ctx, VRT_CTX_MAGIC);
+
+	if (!key) {
 		VSLb(ctx->vsl, SLT_Error,
 		    "vsf.is_denied: Missing key");
 		return (1);
@@ -196,6 +202,32 @@ vmod_is_denied(VRT_CTX, VCL_STRING key, VCL_INT limit, VCL_DURATION period,
 	return (ret);
 }
 
+VCL_VOID
+vmod_return_token(VRT_CTX, VCL_STRING key, VCL_INT limit, VCL_DURATION period,
+               VCL_DURATION block)
+{
+	struct tbucket *b;
+	double now;
+
+	struct vsthrottle *v;
+	unsigned char digest[SHA256_LEN];
+	unsigned part;
+
+	CHECK_OBJ_NOTNULL(ctx, VRT_CTX_MAGIC);
+
+	if (!key)
+		return;
+	do_digest(digest, key, limit, period, block);
+
+	part = digest[0] & N_PART_MASK;
+	v = &vsthrottle[part];
+	AZ(pthread_mutex_lock(&v->mtx));
+	now = VTIM_mono();
+	b = get_bucket(digest, limit, period, now);
+	b->tokens++;
+	AZ(pthread_mutex_unlock(&v->mtx));
+}
+
 /* Clean up expired entries. */
 static void
 run_gc(double now, unsigned part)
@@ -208,15 +240,71 @@ run_gc(double now, unsigned part)
 		CHECK_OBJ_NOTNULL(x, TBUCKET_MAGIC);
 		if (now - x->last_used > x->period) {
 			VRBT_REMOVE(tbtree, buckets, x);
-			free(x);
+			FREE_OBJ(x);
 		}
 	}
 }
 
+VCL_INT
+vmod_remaining(VRT_CTX, VCL_STRING key, VCL_INT limit, VCL_DURATION period,
+	       VCL_DURATION block)
+{
+	unsigned ret;
+	struct tbucket *b;
+	double now;
+	struct vsthrottle *v;
+	unsigned char digest[SHA256_LEN];
+	unsigned part;
+
+	CHECK_OBJ_NOTNULL(ctx, VRT_CTX_MAGIC);
+
+	if (!key)
+		return (-1);
+	do_digest(digest, key, limit, period, block);
+	part = digest[0] & N_PART_MASK;
+	v = &vsthrottle[part];
+	AZ(pthread_mutex_lock(&v->mtx));
+	now = VTIM_mono();
+	b = get_bucket(digest, limit, period, now);
+	calc_tokens(b, now);
+	ret = b->tokens;
+	AZ(pthread_mutex_unlock(&v->mtx));
+	return (ret);
+}
+
+VCL_DURATION
+vmod_blocked(VRT_CTX, VCL_STRING key, VCL_INT limit, VCL_DURATION period,
+             VCL_DURATION block)
+{
+	VCL_DURATION ret;
+	struct tbucket *b;
+	double now;
+	struct vsthrottle *v;
+	unsigned char digest[SHA256_LEN];
+	unsigned part;
+
+	CHECK_OBJ_NOTNULL(ctx, VRT_CTX_MAGIC);
+
+	if (!key)
+		return (-1);
+	do_digest(digest, key, limit, period, block);
+	part = digest[0] & N_PART_MASK;
+	v = &vsthrottle[part];
+	AZ(pthread_mutex_lock(&v->mtx));
+	now = VTIM_mono();
+	b = get_bucket(digest, limit, period, now);
+	ret = b->block - now;
+	AZ(pthread_mutex_unlock(&v->mtx));
+	if (ret <= 0.)
+		ret = 0.;
+	return (ret);
+}
+
 static void
-fini(void *priv)
+fini(VRT_CTX, void *priv)
 {
 	assert(priv == &n_init);
+	CHECK_OBJ_NOTNULL(ctx, VRT_CTX_MAGIC);
 
 	AZ(pthread_mutex_lock(&init_mtx));
 	assert(n_init > 0);
@@ -237,16 +325,22 @@ fini(void *priv)
 	AZ(pthread_mutex_unlock(&init_mtx));
 }
 
-int
-event_function(VRT_CTX, struct vmod_priv *priv, enum vcl_event_e e)
-{
-	(void)ctx;
+static const struct vmod_priv_methods priv_vcl_methods[1] = {{
+	.magic = VMOD_PRIV_METHODS_MAGIC,
+	.type = "vmod_vsthrottle_priv_vcl",
+	.fini = fini
+}};
 
+int
+vmod_event_function(VRT_CTX, struct vmod_priv *priv, enum vcl_event_e e)
+{
 	if (e != VCL_EVENT_LOAD)
 		return (0);
 
+	CHECK_OBJ_NOTNULL(ctx, VRT_CTX_MAGIC);
+
 	priv->priv = &n_init;
-	priv->free = fini;
+	priv->methods = priv_vcl_methods;
 	AZ(pthread_mutex_lock(&init_mtx));
 	if (n_init == 0) {
 		unsigned p;
