@@ -87,10 +87,10 @@ vsf_iter_req_body(void *priv, unsigned flush, const void *ptr, ssize_t len)
 }
 
 static void
-vsf_body_priv_free(VRT_CTX, void *p)
+vsf_body_priv_free(VRT_CTX, void *priv)
 {
 	CHECK_OBJ_NOTNULL(ctx, VRT_CTX_MAGIC);
-	VSB_delete(p);
+	VSB_destroy((struct vsb **)&priv);
 }
 
 static const struct vmod_priv_methods vmod_body_methods[1] = {{
@@ -121,7 +121,7 @@ vmod_body(VRT_CTX, struct vmod_priv *priv, VCL_BYTES maxsize)
 	size = VRT_CacheReqBody(ctx, maxsize);
 	if (size <= 0)
 		return (NULL);
-	vsb = VSB_new(NULL, NULL, size + 1, 0);
+	vsb = VSB_new_auto();
 	if (!vsb) {
 		VSLb(ctx->vsl, SLT_Error,
 		    "vsf.body: Out of memory");
@@ -131,7 +131,7 @@ vmod_body(VRT_CTX, struct vmod_priv *priv, VCL_BYTES maxsize)
 	    vsf_iter_req_body, vsb) == -1) {
 		VSLb(ctx->vsl, SLT_Error,
 		    "vsf.body: Problem fetching the body");
-		VSB_delete(vsb);
+		VSB_destroy(&vsb);
 		return (NULL);
 	}
 	AZ(VSB_finish(vsb));
