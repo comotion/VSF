@@ -26,7 +26,6 @@
  * SUCH DAMAGE.
  */
 
-#include "config.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -135,7 +134,7 @@ calc_tokens(struct tbucket *b, double now)
 
 static
 void do_digest(unsigned char *out, const char *s, VCL_INT l, VCL_DURATION p,
-	       VCL_DURATION b)
+    VCL_DURATION b)
 {
 	SHA256_CTX sctx;
 
@@ -149,7 +148,7 @@ void do_digest(unsigned char *out, const char *s, VCL_INT l, VCL_DURATION p,
 
 VCL_BOOL
 vmod_is_denied(VRT_CTX, VCL_STRING key, VCL_INT limit, VCL_DURATION period,
-               VCL_DURATION block)
+    VCL_DURATION block)
 {
 	unsigned ret = 1, blocked = 0;
 	struct tbucket *b;
@@ -201,7 +200,7 @@ vmod_is_denied(VRT_CTX, VCL_STRING key, VCL_INT limit, VCL_DURATION period,
 
 VCL_VOID
 vmod_return_token(VRT_CTX, VCL_STRING key, VCL_INT limit, VCL_DURATION period,
-               VCL_DURATION block)
+   VCL_DURATION block)
 {
 	struct tbucket *b;
 	double now;
@@ -244,7 +243,7 @@ run_gc(double now, unsigned part)
 
 VCL_INT
 vmod_remaining(VRT_CTX, VCL_STRING key, VCL_INT limit, VCL_DURATION period,
-	       VCL_DURATION block)
+    VCL_DURATION block)
 {
 	unsigned ret;
 	struct tbucket *b;
