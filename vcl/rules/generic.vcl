@@ -4,7 +4,7 @@
 sub vcl_recv {
     # Bad User-Agent - Scanners
     # - http://mod-security.svn.sourceforge.net/ (modsecurity_35_scanners.data)
-    if (req.http.User-Agent ~ "(i)(metis|bilbo|n-stealth|black widow|brutus|cgichk|webtrends security|jaascois|pmafind|\.nasl|nsauditor|paros|nessus|nikto|webinspect|blackwidow)") {
+    if (req.http.User-Agent ~ "(?i)(metis|bilbo|n-stealth|black widow|brutus|cgichk|webtrends security|jaascois|pmafind|\.nasl|nsauditor|paros|nessus|nikto|webinspect|blackwidow)") {
         set req.http.X-VSF-RuleName = "Bad User-Agent - Scanner";
         set req.http.X-VSF-RuleID = "generic.badua-1";
         call sec_handler;
