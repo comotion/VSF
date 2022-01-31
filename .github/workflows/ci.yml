@@ -19,7 +19,7 @@ jobs:
       run: sudo apt-get install -y libedit-dev lcov python3-docutils python3-sphinx
     - name: prereq
       run: |
-        git clone -b varnish-6.6.1 https://github.com/varnishcache/varnish-cache.git
+        git clone -b varnish-6.6.2 https://github.com/varnishcache/varnish-cache.git
         cd varnish-cache && ./autogen.sh && ./configure && make && sudo make install && sudo ldconfig && cd ..
     - name: make check
       run: make check CFLAGS="-Wall -Wextra -Werror" VERBOSE=1

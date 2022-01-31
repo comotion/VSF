@@ -25,8 +25,8 @@ Quick Start
 ===========
 
 To use VSF you will need the vsf vmod, as well as Varnish 6.6.x.
-Start by installing Varnish 6.6.1 as per
-https://varnish-cache.org/releases/rel6.6.1.html
+Start by installing Varnish 6.6.2 as per
+https://varnish-cache.org/releases/rel6.6.2.html
 
 Install instructions vary by OS and distro, but are roughly::
 
