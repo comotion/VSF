@@ -40,7 +40,7 @@
 
 #define FORM_URLENCODED	"application/x-www-form-urlencoded"
 
-void SES_Close(struct sess *, enum sess_close reason);
+void SES_Close(struct sess *, stream_close_t reason);
 
 
 /* Partially based on strlcpy from Todd C. Miller */
